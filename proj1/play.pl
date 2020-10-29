@@ -1,5 +1,4 @@
-play :-
-    
+play :-    
     initial(GameState),
     display_game(GameState,Player),
     game_white(GameState,Winner,8,8),
@@ -21,8 +20,12 @@ display_winner(1):-
 write('Black won!!!').
 
 option(1,GameState,Player,Rings):-
+    nl,
+    write(Rings),
+    nl,
     read_add_ring(Rings,Player,Row,Column,NRow),
-    check_add_ring(GameState,NRow,Column).
+    check_add_ring(GameState,NRow,Column,Rings),
+    add_ring(GameState,NRow,Column).
 
 
 
@@ -43,7 +46,8 @@ option(Option,GameState,'white',Rings_white),
 /*syntax_validation(Piece, Column, Row),
 logic_validation(Piece, Column, Row, GameState, Player),
 move(Piece, Column, Row, GameState, Player),*/
-display_game(GameState,Player),
+display_game(GameState,Player).
+/*
 game_black(GameState,X,Rings_white,Rings_black).
 
 game_black(GameState,X,Rings):-
@@ -54,5 +58,5 @@ syntax_validation(Piece, Column, Row),
 logic_validation(Piece, Column, Row, GameState, Player),
 move(Piece, Column, Row, GameState, Player),
 display_game(GameState,Player),
-game_white(GameState,X,Rings_white,Rings_black).
+game_white(GameState,X,Rings_white,Rings_black).*/
 

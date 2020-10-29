@@ -19,7 +19,7 @@ read_add_ring(0,Player,Row,Column,NRow):-
     write('\nNot enough rings! Choose another option\n'),
     read_option(Option),
     check_option(Option),
-    option(Option,GameState,Player,Row,Column).
+    option(Option,GameState,Player,Rings).
 
 read_add_ring(Rings,Player,Row,Column,NRow):-
     Rings>0,
@@ -62,7 +62,7 @@ check_row('c',2).
 check_row('d',3).
 check_row('e',4).
 
-check_row(Row,NRow).
+check_row(Row,NRow):-
     write('Invalid row! Try again.\n'),
     read_row(Row),
     check_row(Row,NRow).
@@ -74,8 +74,7 @@ letter_to_number('C',2).
 letter_to_number('D',3).
 letter_to_number('E',4).
 
-check_add_ring(GameState,NRow,Column):-
-    
+
 
 
 
