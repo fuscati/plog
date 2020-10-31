@@ -37,7 +37,7 @@ O tabuleiro é representado através de uma lista de listas de listas (linhas*co
 Visualmente, cada célula é constituída por um retêngulo 3*5 cujo centro é a bola, representada por W ou B consoante a cor (White or Black), circundada por anéis, representados por w e b consoante a cor (white or black). O anel do canto superior esquerdo é considerado o topo da stack, sendo que só é ocupado se estiverem 10 anéis na stack (altamente improvável). A partir daí, a ordem dos anéis baixa em sentido horário até se chegar à casa debaixo do canto superior esquerdo, que representa a 10ª posição da stack, ou seja, o anel do fundo. Esta posição estará obrigatoriamente preenchida se houver um uma bola nessa casa.
 
 -![initial_board](initial_board.png)
--![mid_game_board](mid_game.png)
+-![mid_game_board](mid_game_board.png)
 -![final_board](final_board.png)
 
 
