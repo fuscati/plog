@@ -36,6 +36,14 @@ Consiste na jogada onde se movimenta a bola, numa linha reta por cima de um conj
 O tabuleiro é representado através de uma lista de listas de listas (linhas*colunas*stack). Em cada par linha/coluna há uma stack cuja cabeça é a bola (white_ball, black_ball ou empty) e 10 espaços para anéis colocados numa stack (white_ring, black_ring, empty). É apresentado também qual o jogador a jogar e quantos anéis tem disponíveis para adicionar.
 Visualmente, cada célula é constituída por um retêngulo 3*5 cujo centro é a bola, representada por W ou B consoante a cor (White or Black), circundada por anéis, representados por w e b consoante a cor (white or black). O anel do canto superior esquerdo é considerado o topo da stack, sendo que só é ocupado se estiverem 10 anéis na stack (altamente improvável). A partir daí, a ordem dos anéis baixa em sentido horário até se chegar à casa debaixo do canto superior esquerdo, que representa a 10ª posição da stack, ou seja, o anel do fundo. Esta posição estará obrigatoriamente preenchida se houver um uma bola nessa casa.
 
+-![initial_board](initial_board.png)
+-![mid_game_board](mid_game.png)
+-![final_board](final_board.png)
+
+
+## Observações
+Os anéis terão de serão contados de acordo com a altereção do estado do jogo pelo que nos estados de jogo apresentados na primeira entrega não estarão contemplados, pois os tabuleiros são hard-coded.
+
 
 
                      

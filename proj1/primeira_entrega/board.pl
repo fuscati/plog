@@ -1,27 +1,29 @@
+
+
+nitial_board([
+    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]]
+]).
+
 initial_board([
-    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
-    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
-    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
-    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]],
-    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],[black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],[black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]]
+    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],   [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],       [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],      [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],       [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]]
 ]).
 
-
-final_board_white([
-    [[_,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[white_ball,_]],
-    [[_,_],[_,_],[_,_],[white_ball,_],[white_ball,_]]
+nitial_board([
+    [[black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring], [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
+    [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,white_ring,black_ring],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring]],
+    [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [white_ball,empty,empty,empty,empty,empty,empty,white_ring,black_ring,white_ring,black_ring]]
 ]).
 
-final_board_black([
-    [[black_ball,_],[black_ball,_],[_,_],[_,_],[_,_]],
-    [[black_ball,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[_,_]],
-    [[_,_],[_,_],[_,_],[_,_],[_,_]]
-]).
 
 symbol(empty,S) :- S=' '.
 symbol(black_ball,S) :- S='B'.
@@ -38,13 +40,22 @@ letter(2, L) :- L='C'.
 letter(3, L) :- L='D'.
 letter(4, L) :- L='E'.
 
+print_rings('white'):-write('?'),nl.
+print_rings('black'):-write('?'),nl.
 
 
-print_board(GameState):-
+print_board(GameState,Player):-
     nl,
     write('   | 0 | 1 | 2 | 3 | 4 |\n'),
     write('---|---|---|---|---|---|\n'),
-    print_matrix(GameState, 0).
+    print_matrix(GameState, 0),
+    nl,
+    nl,
+    write('Jogador: '),
+    write(Player),
+    nl,
+    write('Aneis: '),
+    print_rings(Player).
 
 
 print_matrix([], 5).
@@ -90,7 +101,7 @@ print_symbol_line3([Head|Tail]) :-
     print_symbol_ring(Head,7),
     print_symbol_ring(Head,6),
     write('|'),
-    print_symbol_line2(Tail).
+    print_symbol_line3(Tail).
 
 print_line([]).
 print_line([Head|Tail]) :-
