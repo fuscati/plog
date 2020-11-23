@@ -16,7 +16,7 @@ initial(GameState) :-
     initial_board(GameState).
 
 display_game(GameState, Player) :-
-    print_board(GameState).
+    print_board(GameState,Player).
 
 display_winner(0):-
 write('White won!!!!').
@@ -44,7 +44,7 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'white',Rings_white,NewRings,NewGameState),
-  display_game(NewGameState,Player).
+  display_game(NewGameState,'white').
 
 game_black(final_board_white,1).
 game_black(final_board_black,2).
@@ -58,4 +58,4 @@ game_black(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'black',Rings_black,NewRings,NewGameState),
-  display_game(NewGameState,Player).
+  display_game(NewGameState,'black').
