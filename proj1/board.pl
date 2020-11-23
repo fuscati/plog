@@ -38,23 +38,17 @@ symbol(black_ring,S) :- S='b'.
 symbol(black_white_ring,S) :- S='+'.
 symbol(white_black_ring,S) :- S='+'.
 
-
-
-
 letter(0, L) :- L='A'.
 letter(1, L) :- L='B'.
 letter(2, L) :- L='C'.
 letter(3, L) :- L='D'.
 letter(4, L) :- L='E'.
 
-
-
 print_board(GameState):-
     nl,
     write('   | 0 | 1 | 2 | 3 | 4 |\n'),
     write('---|---|---|---|---|---|\n'),
     print_matrix(GameState, 0).
-
 
 print_matrix([], 5).
 print_matrix([Head|Tail], N) :-
@@ -75,7 +69,6 @@ print_matrix([Head|Tail], N) :-
     print_symbol_line3(Head),
     write('\n---|---|---|---|---|---|\n'),
     print_matrix(Tail, N1).
-
 
 print_symbol_line1([]).
 print_symbol_line1([Head|Tail]) :-
@@ -109,7 +102,6 @@ print_line([Head|Tail]) :-
     write('|'),
     print_line(Tail).
 
-
 print_symbol_ring([Head|Tail],0):-
     symbol(Head,S),
     write(S).
@@ -123,4 +115,3 @@ print_symbol_ring([Head|Tail],N):-
 print_ball([Head|Tail]) :-
     symbol(Head,S),
     write(S).
-
