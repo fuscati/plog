@@ -55,8 +55,8 @@ clone([],[]).
 clone([H|T],[H|Z]):- clone(T,Z).
 
 
-  ball_to_color('white_ball','white').
-  ball_to_color('black_ball','black').
+ball_to_color('white_ball','white').
+ball_to_color('black_ball','black').
 
-  ring_to_color('white_ring','white').
-  ring_to_color('black_ring','black').
+ring_to_color('white_ring','white').
+ring_to_color('black_ring','black').

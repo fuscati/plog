@@ -44,7 +44,7 @@ print_rings('white'):-write('?'),nl.
 print_rings('black'):-write('?'),nl.
 
 
-print_board(GameState,Player):-
+print_board(GameState,Player,Rings):-
     nl,
     write('   | 0 | 1 | 2 | 3 | 4 |\n'),
     write('---|---|---|---|---|---|\n'),
@@ -52,7 +52,8 @@ print_board(GameState,Player):-
     nl,
     nl,
     write('Aneis: '),
-    print_rings(Player).
+    /*print_rings(Player).*/
+    write(Rings).
 
 
 print_matrix([], 5).
@@ -122,4 +123,3 @@ print_symbol_ring([Head|Tail],N):-
 print_ball([Head|Tail]) :-
     symbol(Head,S),
     write(S).
-

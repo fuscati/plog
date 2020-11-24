@@ -1,6 +1,6 @@
 play :-
     initial(GameState),
-    display_game(GameState,Player),
+    display_game(GameState,Player,8),
     play_loop(GameState,Winner,8,8),
     nl,
     display_winner(Winner).
@@ -8,15 +8,15 @@ play :-
 play_loop(GameState,Winner,WhiteRings,BlackRings) :-
   GameState\=final_board_white,
   GameState\=final_board_black,
-  game_white(GameState,Winner,WhiteRings,BlackRings,NewWhiteGameState),
-  game_black(NewWhiteGameState,Winner,WhiteRings,BlackRings,NewBlackGameState),
-  play_loop(NewBlackGameState,Winner,WhiteRings,BlackRings).
+  game_white(GameState,Winner,WhiteRings,BlackRings,NewWhiteGameState,NewWhiteRings),
+  game_black(NewWhiteGameState,Winner,NewWhiteRings,BlackRings,NewBlackGameState,NewBlackRings),
+  play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
 initial(GameState) :-
     initial_board(GameState).
 
-display_game(GameState, Player) :-
-    print_board(GameState,Player).
+display_game(GameState, Player, Rings) :-
+    print_board(GameState,Player,Rings).
 
 display_winner(0):-
 write('White won!!!!').
@@ -45,7 +45,7 @@ read_move_ball(GameState,Player,NewGameState):-
 game_white(final_board_white,1).
 game_white(final_board_black,2).
 
-game_white(GameState,X,Rings_white,Rings_black,NewGameState):-
+game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
   GameState\=final_board_white,
   GameState\=final_board_black,
   nl,
@@ -54,15 +54,14 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'white',Rings_white,NewRings,NewGameState),
-  GameState is NewBlackGameState,
+  display_game(NewGameState,'white',NewRings),
   read_move_ball(GameState,Player,NewGameState),
-  GameState is NewBlackGameState,
-  display_game(NewGameState,'white').
+  display_game(NewGameState,'white',NewRings).
 
 game_black(final_board_white,1).
 game_black(final_board_black,2).
 
-game_black(GameState,X,Rings_white,Rings_black,NewGameState):-
+game_black(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
   GameState\=final_board_white,
   GameState\=final_board_black,
   nl,
@@ -71,7 +70,6 @@ game_black(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'black',Rings_black,NewRings,NewGameState),
-  GameState is NewBlackGameState,
+  display_game(NewGameState,'black',NewRings),
   read_move_ball(GameState,Player,NewGameState),
-  GameState is NewBlackGameState,
-  display_game(NewGameState,'black').
+  display_game(NewGameState,'black',NewRings).
