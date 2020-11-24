@@ -23,8 +23,12 @@ add_ring(GameState,Player,Row,Column,RingsNumber,NewRingsNumber,NewGameState):-
     replace_ring(GameState,Player,Row,Column,Ball,Rings,Index,NewGameState),
     NewRingsNumber is RingsNumber - 1.
 
+
+
+
 can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     is_adjacent(Row,Column, DestinationRow, DestinationColumn, Bool),
+    Bool =:= 0 -> !; true,
     get_ball(SelColumn, SelRow, Ball, GameState), 
     ball_to_color(Ball,Color),
     (

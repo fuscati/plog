@@ -1,14 +1,13 @@
 read_option(Option):-
     write('Please select your play\n'),
     write('Add new ring: 1\n'),
-    write('Move ring: 2\n'),
-    write('Move ball: 3\n'),
+    write('Move ring: 2\n  || not implemented yet'),
     read(Option),
     write(Option).
     
 check_option(1).
 check_option(2).
-check_option(3).
+
 
 check_option(Option):-
     write('\nInvalid Option. Try again\n'),
@@ -29,6 +28,15 @@ read_add_ring(Rings,Player,Row,Column,NRow):-
     read_row(Row),
     check_row(Row,NRow),
     write(Column),write(' '),write(Row).
+
+read_ball_from_move(Player,Row,Column,NRow):-
+    write('\nPlease select from where you want to move a ball\n'),
+    read_column(Column),
+    check_column(Column),
+    read_row(Row),
+    check_row(Row,NRow).
+
+
 
 read_column(Column):-
     write('Column- '),

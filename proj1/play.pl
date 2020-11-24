@@ -32,6 +32,16 @@ option(1,GameState,Player,Rings,NewRings,NewGameState):-
     check_add_ring(GameState,NRow,Column,Rings),
     add_ring(GameState,Player,NRow,Column,Rings,NewRings,NewGameState).
 
+
+read_move_ball(GameState,Player,NewGameState):-
+    nl,
+    read_ball_from_move(Player,Row,Column_from,NRow_from),
+    check_ball_from_move(GameState,NRow_from,Column_from),
+    read_ball_to_move(Player,Row,Column_to,NRow_to),
+    check_ball_to_move(GameState,NRow_to,Column_to),
+    move_ball(GameState,NRow_from,Column_from,NRow_to,Column_to,NewGameState).
+
+
 game_white(final_board_white,1).
 game_white(final_board_black,2).
 
@@ -44,6 +54,9 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'white',Rings_white,NewRings,NewGameState),
+  GameState is NewBlackGameState,
+  read_move_ball(GameState,Player,NewGameState),
+  GameState is NewBlackGameState,
   display_game(NewGameState,'white').
 
 game_black(final_board_white,1).
@@ -58,4 +71,7 @@ game_black(GameState,X,Rings_white,Rings_black,NewGameState):-
   read_option(Option),
   check_option(Option),
   option(Option,GameState,'black',Rings_black,NewRings,NewGameState),
+  GameState is NewBlackGameState,
+  read_move_ball(GameState,Player,NewGameState),
+  GameState is NewBlackGameState,
   display_game(NewGameState,'black').
