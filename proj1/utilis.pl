@@ -11,21 +11,38 @@ get_rings(SelColumn, SelRow, Rings, Ball, GameState) :-
   nth0(SelColumn, BoardRow, BoardCell),
   [Ball|Rings] = BoardCell.
 
-get_top_ring([],StartIndex,Index) :-
+get_top_ring_index([],StartIndex,Index) :-
   Index is StartIndex,
   nl,
   write('No Ring found!').
-get_top_ring(['white_ring'|_],StartIndex,Index) :-
+get_top_ring_index(['white_ring'|_],StartIndex,Index) :-
   Index is StartIndex,
   nl,
   write('Ring found: white_ring').
-get_top_ring(['black_ring'|_],StartIndex,Index) :-
+get_top_ring_index(['black_ring'|_],StartIndex,Index) :-
   Index is StartIndex,
   nl,
   write('Ring found: black_ring').
-get_top_ring([_|T],StartIndex,Index) :-
+get_top_ring_index([_|T],StartIndex,Index) :-
   NextIndex is StartIndex + 1,
-  get_top_ring(T,NextIndex, Index).
+  get_top_ring_index(T,NextIndex, Index).
+
+get_top_ring(SelColumn, SelRow, Ring, GameState):-
+  nth0(SelRow, GameState, BoardRow),
+  nth0(SelColumn, BoardRow, BoardCell),
+  top_ring_cycle(BoardCell, Ring,0),
+  write(Ring).
+
+top_ring_cycle(BoardCell, white_ring, N).
+
+top_ring_cycle(BoardCell, black_ring, N).
+
+top_ring_cycle(BoardCell, Ring, 11).
+
+top_ring_cycle(BoardCell, Ring, N):-
+  N<11,
+  N1 is N+1,
+  top_ring_cycle(BoardCell, Ring,N1).
 
 replace_ring(GameState,'white',Row,Column,Ball,Rings,Index,NewGameState) :-
   I is Index - 1,

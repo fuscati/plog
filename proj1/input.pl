@@ -1,7 +1,7 @@
 read_option(Option):-
     write('Please select your play\n'),
     write('Add new ring: 1\n'),
-    write('Move ring: 2\n  || not implemented yet'),
+    write('Move ring: 2\n  || not implemented yet\n'),
     read(Option),
     write(Option).
     
@@ -21,20 +21,28 @@ read_add_ring(0,Player,Row,Column,NRow):-
     option(Option,GameState,Player,Rings).
 
 read_add_ring(Rings,Player,Row,Column,NRow):-
-    Rings>0,
     write('\nPlease select where you want to add the ring\n'),
     read_column(Column),
     check_column(Column),
     read_row(Row),
-    check_row(Row,NRow),
-    write(Column),write(' '),write(Row).
+    write(Column),write(' '),write(Row),
+    check_row(Row,NRow).
 
 read_ball_from_move(Player,Row,Column,NRow):-
     write('\nPlease select from where you want to move a ball\n'),
     read_column(Column),
     check_column(Column),
     read_row(Row),
+    write(Column),write(' '),write(Row),nl,
     check_row(Row,NRow).
+
+read_ball_to_move(Player,Row,Column,NRow):-
+    write('\nPlease select to where you want to move the ball\n'),
+    read_column(Column),
+    check_column(Column),
+    read_row(Row),
+    write(Column),write(' '),write(Row),nl.
+    /*check_row(Row,NRow).*/
 
 
 
@@ -72,6 +80,8 @@ check_row('e',4).
 
 check_row(Row,NRow):-
     write('Invalid row! Try again.\n'),
+    write(Row),
+    nl,
     read_row(Row),
     check_row(Row,NRow).
 
