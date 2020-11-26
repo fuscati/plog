@@ -30,9 +30,9 @@ can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     is_adjacent(Column, DestinationColumn, Value),
     Bool1 is Bool*Value,
     Bool is Bool1,
-    write('Adjacent: '),write(Bool),nl,
+
     get_ball(Column, Row, Ball, GameState),
-    write('Ball: '),write(Ball),nl,
+
     ball_to_color(Ball,Color),
     compare_color(Color,Player,Value),
     Bool1 is Bool*Value,
@@ -44,9 +44,9 @@ can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     Bool is Bool1.
 
 move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player):-
-    replace_ball(GameState,Row_from,Column_from,'empty',NewGameState),
+    replace_ball(GameState,Row_from,Column_from,'empty',NGameState),
     ball_to_color(Ball,Player),
-    replace_ball(GameState,Row_to,Column_to,Ball,NewGameState).
+    replace_ball(NGameState,Row_to,Column_to,Ball,NewGameState).
 
 
 is_adjacent(0,0,1).

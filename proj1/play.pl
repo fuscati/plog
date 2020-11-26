@@ -1,6 +1,6 @@
 startGame(_Player1, _Player2) :-
     initial(GameState),
-  %display_game(GameState,Player,8),
+    display_game(GameState,Player,8),
     play_loop(GameState,Winner,8,8),
     nl,
     display_winner(Winner).
@@ -51,21 +51,21 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
   read_option(Option),
   check_option(Option,Rings_white,NewOption),
   option(NewOption,GameState,'white',Rings_white,NewRings,NewGameState),
-  %display_game(NewGameState,'white',NewRings),
-  read_move_ball(GameState,'white',NewGameState),
-  display_game(NewGameState,'white',NewRings).
+  display_game(NewGameState,'white',NewRings),
+  read_move_ball(NewGameState,'white',NGameState),
+  display_game(NGameState,'white',NewRings).
 
 
 
-game_black(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
-  GameState\=final_board_white,
-  GameState\=final_board_black,
+game_black(GameState,X,Rings_black,Rings_black,NewGameState,NewRings):-
+  /*GameState\=final_board_black,
+  GameState\=final_board_black,*/
   nl,
   write('Player Black'),
   nl,
   read_option(Option),
-  check_option(Option),
-  option(Option,GameState,'black',Rings_black,NewRings,NewGameState),
+  check_option(Option,Rings_black,NewOption),
+  option(NewOption,GameState,'black',Rings_black,NewRings,NewGameState),
   display_game(NewGameState,'black',NewRings),
-  read_move_ball(GameState,Player,NewGameState),
-  display_game(NewGameState,'black',NewRings).
+  read_move_ball(NewGameState,'black',NGameState),
+  display_game(NGameState,'black',NewRings).

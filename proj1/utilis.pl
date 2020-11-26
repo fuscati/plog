@@ -69,16 +69,16 @@ replace_ring(GameState,'black',Row,Column,Ball,Rings,Index,NewGameState) :-
 
 replace_ball(GameState,Row,Column,Ball,NewGameState):-
   get_cell(Column, Row,Cell, GameState),
-  nl,write('cell: '),write(Cell),nl,
+
   replace(Cell,0,Ball,NCell),
-  nl,write('new cell: '),write(NCell),nl,
+
   get_row(Row, GameState, NRow),
-  nl,write('row: '),write(NRow),nl,
+
   replace(NRow, Column, NCell, NewRow),
-  nl,write('new row: '),write(NewRow),nl,
+
   replace(GameState, Row, NewRow, NewGameState).
   
-
+empty_list([H|T],[]).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
