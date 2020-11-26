@@ -31,31 +31,20 @@ read_add_ring(0,Player,Row,Column,NRow):-
 
 read_add_ring(Rings,Player,Row,Column,NRow):-
     write('\nPlease select where you want to add the ring\n'),
-    read_column(Column),
-    check_column(Column),
-    read_row(Row),
-    write(Column),write(' '),write(Row),
-    check_row(Row,NRow).
+    getCoords(NRow,Column).
 
 read_ball_from_move(Player,Column,NRow):-
     write('\nPlease select from where you want to move a ball\n'),
-    read_column(Column),
-    check_column(Column),
-    read_row(Row),
-    write(Column),write(' '),write(Row),nl,
-    check_row(Row,NRow).
+    getCoords(NRow,Column).
 
 read_ball_to_move(Player,Column,NRow):-
     write('\nPlease select to where you want to move the ball\n'),
-    read_column(Column),
-    check_column(Column),
-    read_row(Row),
-    check_row(Row,NRow).
+    getCoords(NRow,Column).
     
 
 
 
-read_column(Column):-
+/*read_column(Column):-
     write('Column- '),
     read(Column).
 
@@ -92,7 +81,7 @@ check_row(Row,NRow):-
     write(Row),
     nl,
     read_row(Row),
-    check_row(Row,NRow).
+    check_row(Row,NRow). */
 
 
 letter_to_number('A',0).
@@ -126,20 +115,19 @@ readColumn(Column) :-
     read(Column),
     nl,write(Column).
 
-validateRow('A', NewRow) :-
-    NewRow = 0.
+validateRow('A', 0).
+ 
+validateRow('B', 1).
 
-validateRow('B', NewRow) :-
-    NewRow = 1.
 
-validateRow('C', NewRow) :-
-    NewRow = 2.
+validateRow('C', 2).
+  
 
-validateRow('D', NewRow) :-
-    NewRow = 3.
+validateRow('D', 3).
 
-validateRow('E', NewRow) :-
-    NewRow = 4.
+
+validateRow('E', 4).
+
 
 
 validateRow(_Row, NewRow) :-

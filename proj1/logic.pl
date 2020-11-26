@@ -18,44 +18,55 @@ add_ring(GameState,Player,Row,Column,RingsNumber,NewRingsNumber,NewGameState):-
     get_rings(Column, Row, Rings, Ball, GameState),
     get_top_ring_index(Rings,0,Index),
     nl,
-    write('Index = '),
-    write(Index),
     replace_ring(GameState,Player,Row,Column,Ball,Rings,Index,NewGameState),
     NewRingsNumber is RingsNumber - 1.
 
 
 can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
-    is_adjacent(Row,Column, DestinationRow, DestinationColumn, Bool),
+    Bool is 1,
+    is_adjacent(Row, DestinationRow, Value),
+    Bool1 is Bool*Value,
+    Bool is Bool1,
+    is_adjacent(Column, DestinationColumn, Value),
+    Bool1 is Bool*Value,
+    Bool is Bool1,
     write('Adjacent: '),write(Bool),nl,
     get_ball(Column, Row, Ball, GameState),
     write('Ball: '),write(Ball),nl,
     ball_to_color(Ball,Color),
-    (
-        Color =:=Player ->
-        Bool1 is Bool;
-        Bool1 is 0
-
-    ),
+    compare_color(Color,Player,Value),
+    Bool1 is Bool*Value,
     Bool is Bool1,
     get_top_ring(DestinationColumn, DestinationRow, Ring, GameState),
-    write('Ring: '),write(Ring),nl,
     ring_to_color(Ring,Color),
-    (
-        Color =:=Player ->
-        Bool1 is Bool;
-        Bool1 is 0
-    ),
+    compare_color(Color,Player,Value),
+    Bool1 is Bool*Value,
     Bool is Bool1.
 
-is_adjacent(Row,Column, Row+1, Column+1, 1).
-is_adjacent(Row,Column, Row, Column+1, 1).
-is_adjacent(Row,Column, Row-1, Column+1, 1).
-is_adjacent(Row,Column, Row+1, Column-1, 1).
-is_adjacent(Row,Column, Row, Column-1, 1).
-is_adjacent(Row,Column, Row-1, Column-1, 1).
-is_adjacent(Row,Column, Row+1, Column, 1).
-is_adjacent(Row,Column, Row-1, Column, 1).
-is_adjacent(_,_, _, _, 0).
+move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player):-
+    replace_ball(GameState,Row_from,Column_from,'empty',NewGameState),
+    ball_to_color(Ball,Player),
+    replace_ball(GameState,Row_to,Column_to,Ball,NewGameState).
+
+
+is_adjacent(0,0,1).
+is_adjacent(1,0,1).
+is_adjacent(0,1,1).
+is_adjacent(1,1,1).
+is_adjacent(2,1,1).
+is_adjacent(1,2,1).
+is_adjacent(2,2,1).
+is_adjacent(3,2,1).
+is_adjacent(2,3,1).
+is_adjacent(3,3,1).
+is_adjacent(4,3,1).
+is_adjacent(3,4,1).
+is_adjacent(4,4,1).
+is_adjacent(5,4,1).
+
+is_adjacent(_,_,0).
+
+
 
 check_ball_from_move(Player,GameState,NRow_from,Column_from):-
     get_ball(Column_from, NRow_from, Ball, GameState),
@@ -68,16 +79,22 @@ check_ball_from_move(Player,GameState,NRow_from,Column_from):-
     ); true
     ).
 
-check_ball_to_move(Player,GameState,NRow_to,Column_to):-
-    get_ball(Column_to, NRow_to, Ball, GameState),
+check_ball_to_move(Player,GameState,Row_to,Column_to):-
+    get_ball(Column_to, Row_to, Ball, GameState),
     is_empty(Ball,Empty),
     (
        Empty=:=0->(    
     nl,
-    read_ball_to_move(Player,Row,Column_to,NRow_to),
-    check_ball_to_move(Player,GameState,NRow_to,Column_to)
+    write('There is a ball there. Try again'),
+    write(Ball),
+    read_ball_to_move(Player,Column_to,Row_to),
+    check_ball_to_move(Player,GameState,Row_to,Column_to)
     ); true
     ).
 
 is_empty('empty',1).
 is_empty(_,0).
+
+compare_color('white','white',1).
+compare_color('black','black',1).
+compare_color(_,_,0).

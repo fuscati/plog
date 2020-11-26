@@ -1,6 +1,6 @@
 startGame(_Player1, _Player2) :-
     initial(GameState),
-    %display_game(GameState,Player,8),
+  %display_game(GameState,Player,8),
     play_loop(GameState,Winner,8,8),
     nl,
     display_winner(Winner).
@@ -33,16 +33,13 @@ option(1,GameState,Player,Rings,NewRings,NewGameState):-
 
 read_move_ball(GameState,Player,NewGameState):-
     nl,
-    read_ball_from_move(Player,Column_from,NRow_from),
-    check_ball_from_move(Player,GameState,NRow_from,Column_from),
-    read_ball_to_move(Player,Column_to,NRow_to),
-    check_ball_to_move(Player,GameState,NRow_to,Column_to),
-    write('WE DID IT BOIS'),
-    can_move(GameState,Player,NRow_from,Column_from, Column_to, Row_to,Bool),
-    nl,write('------------'),nl,write(Bool),nl,write('------------'),nl.
-   /* %move_ball(GameState,NRow_from,Column_from,NRow_to,Column_to,NewGameState).
-
-*/
+    read_ball_from_move(Player,Column_from,Row_from),
+    check_ball_from_move(Player,GameState,Row_from,Column_from),
+    read_ball_to_move(Player,Column_to,Row_to),
+    check_ball_to_move(Player,GameState,Row_to,Column_to),
+    can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool),
+    nl,write('------------'),nl,write(Bool),nl,write('------------'),nl,
+    move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player).
 
 
 game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
