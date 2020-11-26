@@ -70,11 +70,14 @@ check_ball_from_move(Player,GameState,NRow_from,Column_from):-
 
 check_ball_to_move(Player,GameState,NRow_to,Column_to):-
     get_ball(Column_to, NRow_to, Ball, GameState),
-    Empty is 'empty',
+    is_empty(Ball,Empty),
     (
-       Ball=:=Empty->(    
+       Empty=:=0->(    
     nl,
     read_ball_to_move(Player,Row,Column_to,NRow_to),
     check_ball_to_move(Player,GameState,NRow_to,Column_to)
     ); true
     ).
+
+is_empty('empty',1).
+is_empty(_,0).

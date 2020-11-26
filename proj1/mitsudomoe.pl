@@ -3,8 +3,7 @@
 :-consult('input.pl').
 :-consult('logic.pl').
 :-consult('utilis.pl').
-/*:-use_module(library(random)).
-:-use_module(library(clpfd)).*/
+:-consult('menu.pl').
 :-use_module(library(lists)).
 
 mitsudomoe:-

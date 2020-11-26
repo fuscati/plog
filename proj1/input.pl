@@ -5,11 +5,20 @@ read_option(Option):-
     read(Option),
     write(Option).
     
-check_option(1).
-check_option(2).
+check_option(1,0,Option):-
+    write('\nYou have 0 Rings. You cannot add a ring\n'),
+    read_option(Option),
+    check_option(Option,0).
+
+check_option(1,_,Option):-
+Option=1.
+
+check_option(2,_,Option):-
+Option=2.
 
 
-check_option(Option):-
+check_option(Option,Rings,Option):-
+    Option>2,
     write('\nInvalid Option. Try again\n'),
     read_option(Option),
     check_option(Option).
@@ -28,7 +37,7 @@ read_add_ring(Rings,Player,Row,Column,NRow):-
     write(Column),write(' '),write(Row),
     check_row(Row,NRow).
 
-read_ball_from_move(Player,Row,Column,NRow):-
+read_ball_from_move(Player,Column,NRow):-
     write('\nPlease select from where you want to move a ball\n'),
     read_column(Column),
     check_column(Column),
@@ -36,13 +45,13 @@ read_ball_from_move(Player,Row,Column,NRow):-
     write(Column),write(' '),write(Row),nl,
     check_row(Row,NRow).
 
-read_ball_to_move(Player,Row,Column,NRow):-
+read_ball_to_move(Player,Column,NRow):-
     write('\nPlease select to where you want to move the ball\n'),
     read_column(Column),
     check_column(Column),
     read_row(Row),
-    write(Column),write(' '),write(Row),nl.
-    /*check_row(Row,NRow).*/
+    check_row(Row,NRow).
+    
 
 
 
@@ -95,7 +104,70 @@ letter_to_number('E',4).
 
 
 
+getCoords(Row,Column):-
+    manageColumn(Column),
+    manageRow(Row).
 
+manageRow(NewRow) :-
+    readRow(Row),
+    validateRow(Row, NewRow).
+
+manageColumn(NewColumn) :-
+    readColumn(Column),
+    validateColumn(Column, NewColumn).
+
+readRow(Row) :-
+    write('  > Row    '),
+    read(Row),
+    nl,write(Row).
+
+readColumn(Column) :-
+    write('  > Column '),
+    read(Column),
+    nl,write(Column).
+
+validateRow('A', NewRow) :-
+    NewRow = 0.
+
+validateRow('B', NewRow) :-
+    NewRow = 1.
+
+validateRow('C', NewRow) :-
+    NewRow = 2.
+
+validateRow('D', NewRow) :-
+    NewRow = 3.
+
+validateRow('E', NewRow) :-
+    NewRow = 4.
+
+
+validateRow(_Row, NewRow) :-
+    write('ERROR: That row is not valid!\n\n'),
+    readRow(Input),
+    validateRow(Input, NewRow).
+
+
+validateColumn(0, NewColumn) :-
+    NewColumn = 0.
+
+validateColumn(1, NewColumn) :-
+    NewColumn = 1.
+
+validateColumn(2, NewColumn) :-
+    NewColumn = 2.
+
+validateColumn(3, NewColumn) :-
+    NewColumn = 3.
+
+validateColumn(4, NewColumn) :-
+    NewColumn = 4.
+
+
+validateColumn(_Column, NewColumn) :-
+    write('ERROR: That column is not valid!\n\n'),
+    readColumn(Input),
+    validateColumn(Input, NewColumn).
 
 
     
