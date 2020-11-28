@@ -8,11 +8,9 @@ startGame(_Player1, _Player2) :-
 play_loop(GameState,Winner,WhiteRings,BlackRings) :-
   /*GameState\=final_board_white,
   GameState\=final_board_black,*/
-  game_white(GameState,Winner,WhiteRings,BlackRings,NewWhiteGameState,NewWhiteRings),
-  write('cycle'),nl,
-  write(BlackRings),nl,
-  game_black(NewWhiteGameState,Winner,NewWhiteRings,BlackRings,NewBlackGameState,NewBlackRings),
-  play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
+  game_white(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings),
+  game_black(NewWhiteGameState,Winner,BlackRings,NewBlackGameState,NewBlackRings),
+  play_loop(NewWhiteGameState,Winner,NewWhiteRings,NewBlackRings).
 
 initial(GameState) :-
     initial_board(GameState).
@@ -32,6 +30,13 @@ option(1,GameState,Player,Rings,NewRings,NewGameState):-
     check_add_ring(GameState,Row,Column,Rings),
     add_ring(GameState,Player,Row,Column,Rings,NewRings,NewGameState).
 
+option(2,GameState,Player,Rings,NewRings,NewGameState):-
+    write('\nPlease select which ring you want to move\n'),
+    getCoords(Row,Column),
+    check_remove_ring(Player,GameState,Row,Column),
+    remove_ring(GameState,Player,Row,Column,Rings,NGameState),
+    NewRings is Rings,
+    option(1,NGameState,Player,8,_,NewGameState).
 
 read_move_ball(GameState,Player,NewGameState):-
     nl,
@@ -44,7 +49,7 @@ read_move_ball(GameState,Player,NewGameState):-
     move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player).
 
 
-game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
+game_white(GameState,X,Rings_white,NewGameState,NewRings):-
   /*GameState\=final_board_white,
   GameState\=final_board_black,*/
   nl,
@@ -52,15 +57,12 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
   nl,
   read_option(Option),
   check_option(Option,Rings_white,NewOption),
-  option(NewOption,GameState,'white',Rings_white,NewRings,NewGameState),
-  display_game(NewGameState,'white',NewRings),
-  read_move_ball(NewGameState,'white',NGameState),
-  display_game(NGameState,'white',NewRings).
+  option(NewOption,GameState,'white',Rings_white,NewRings,NGameState),
+  display_game(NGameState,'white',NewRings),
+  read_move_ball(NGameState,'white',NewGameState),
+  display_game(NewGameState,'white',NewRings).
 
-
-
-
-game_black(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
+game_black(GameState,X,Rings_black,NewGameState,NewRings):-
 
   /*GameState\=final_board_black,
   GameState\=final_board_black,*/
@@ -69,7 +71,7 @@ game_black(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
   nl,
   read_option(Option),
   check_option(Option,Rings_black,NewOption),
-  option(NewOption,GameState,'black',Rings_black,NewRings,NewGameState),
-  display_game(NewGameState,'black',NewRings),
-  read_move_ball(NewGameState,'black',NGameState),
-  display_game(NGameState,'black',NewRings).
+  option(NewOption,GameState,'black',Rings_black,NewRings,NGameState),
+  display_game(NGameState,'black',NewRings),
+  read_move_ball(NGameState,'black',NewGameState),
+  display_game(NewGameState,'black',NewRings).

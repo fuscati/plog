@@ -31,27 +31,23 @@ get_top_ring_index([_|T],StartIndex,Index) :-
   NextIndex is StartIndex + 1,
   get_top_ring_index(T,NextIndex, Index).
 
-get_top_ring(SelColumn, SelRow, Ring, GameState):-
-  nth0(SelRow, GameState, BoardRow),
-  nth0(SelColumn, BoardRow, BoardCell),
-  top_ring_cycle(BoardCell, Ring,0).
+get_top_ring(Row, Column, Ring, GameState) :-
+  get_cell(Row, Column, [_|Rings], GameState),
+  get_top_ring_cycle(Rings, Ring).
 
-top_ring_cycle(BoardCell, white_ring, N).
+get_top_ring_cycle([], 'empty').
 
-top_ring_cycle(BoardCell, black_ring, N).
+get_top_ring_cycle(['white_ring'|_], 'white_ring').
 
-top_ring_cycle(BoardCell, Ring, 11).
+get_top_ring_cycle(['black_ring'|_], 'black_ring').
 
-top_ring_cycle(BoardCell, Ring, N):-
-  N<11,
-  N1 is N+1,
-  top_ring_cycle(BoardCell, Ring,N1).
+get_top_ring_cycle(['empty'|T], Ring) :-
+  get_top_ring_cycle(T, Ring).
 
 replace_ring(GameState,'white',Row,Column,Ball,Rings,Index,NewGameState) :-
   I is Index - 1,
   replace(Rings,I,'white_ring',R),
   BR = [Ball|R],
-  nl,
   write(BR),
   get_row(Row, GameState, NRow),
   replace(NRow, Column, BR, NewRow),
@@ -61,11 +57,17 @@ replace_ring(GameState,'black',Row,Column,Ball,Rings,Index,NewGameState) :-
   I is Index - 1,
   replace(Rings,I,'black_ring',R),
   BR = [Ball|R],
-  nl,
   get_row(Row, GameState, NRow),
   replace(NRow, Column, BR, NewRow),
   replace(GameState, Row, NewRow, NewGameState).
 
+replace_ring(GameState,'empty',Row,Column,Ball,Rings,Index,NewGameState) :-
+  replace(Rings,Index,'empty',R),
+  BR = [Ball|R],
+  get_row(Row, GameState, NRow),
+  replace(NRow, Column, BR, NewRow),
+  replace(GameState, Row, NewRow, NewGameState),
+  write(R).
 
 replace_ball(GameState,Row,Column,Ball,NewGameState):-
   get_cell(Column, Row,Cell, GameState),
@@ -77,7 +79,7 @@ replace_ball(GameState,Row,Column,Ball,NewGameState):-
   replace(NRow, Column, NCell, NewRow),
 
   replace(GameState, Row, NewRow, NewGameState).
-  
+
 empty_list([H|T],[]).
 
 replace([_|T], 0, X, [X|T]).

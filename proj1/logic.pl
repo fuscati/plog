@@ -21,6 +21,37 @@ add_ring(GameState,Player,Row,Column,RingsNumber,NewRingsNumber,NewGameState):-
     replace_ring(GameState,Player,Row,Column,Ball,Rings,Index,NewGameState),
     NewRingsNumber is RingsNumber - 1.
 
+check_remove_ring(Player,GameState,Row,Column):-
+  get_ball(Column, Row, Ball, GameState),
+  get_top_ring(Column, Row, TopRing, GameState),
+  check_remove_ring_decision(Player,GameState,Row,Column,Ball,TopRing).
+
+check_remove_ring_decision(Player,GameState,Row,Column,'black_ball',TopRing):-
+  write('\nYou cant move a ring from here. There is a black ball'),
+  read_move_ring(Player,Row,Column,NRow),
+  check_remove_ring(Player,GameState,Row,Column,TopRing).
+
+check_remove_ring_decision(Player,GameState,Row,Column,'white_ball',TopRing):-
+    write('\nYou cant move a ring from here. There is a white ball'),
+    read_move_ring(Player,Row,Column,NRow),
+    check_remove_ring(Player,GameState,Row,Column,TopRing).
+
+check_remove_ring_decision('white',GameState,Row,Column,'empty','black_ring'):-
+  write('\nYou cant move a ring from here. Top ring is black'),
+  read_move_ring(Player,Row,Column,NRow),
+  check_remove_ring(Player,GameState,Row,Column,TopRing).
+
+check_remove_ring_decision('black',GameState,Row,Column,'empty','white_ring'):-
+  write('\nYou cant move a ring from here. Top ring is white'),
+  read_move_ring(Player,Row,Column,NRow),
+  check_remove_ring(Player,GameState,Row,Column,TopRing).
+
+check_remove_ring_decision(_,_,_,_,'empty',_).
+
+remove_ring(GameState,Player,Row,Column,RingsNumber,NewGameState):-
+    get_rings(Column, Row, Rings, Ball, GameState),
+    get_top_ring_index(Rings,0,Index),
+    replace_ring(GameState,'empty',Row,Column,Ball,Rings,Index,NewGameState).
 
 can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     Bool is 1,
@@ -72,7 +103,7 @@ check_ball_from_move(Player,GameState,NRow_from,Column_from):-
     get_ball(Column_from, NRow_from, Ball, GameState),
     ball_to_color(Ball,Color),
     (
-    Color\=Player->(    
+    Color\=Player->(
     nl,
     read_ball_from_move(Player,Row,Column_from,NRow_from),
     check_ball_from_move(Player,GameState,NRow_from,Column_from)
@@ -83,7 +114,7 @@ check_ball_to_move(Player,GameState,Row_to,Column_to):-
     get_ball(Column_to, Row_to, Ball, GameState),
     is_empty(Ball,Empty),
     (
-       Empty=:=0->(    
+       Empty=:=0->(
     nl,
     write('There is a ball there. Try again'),
     write(Ball),
