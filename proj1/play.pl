@@ -9,6 +9,8 @@ play_loop(GameState,Winner,WhiteRings,BlackRings) :-
   /*GameState\=final_board_white,
   GameState\=final_board_black,*/
   game_white(GameState,Winner,WhiteRings,BlackRings,NewWhiteGameState,NewWhiteRings),
+  write('cycle'),nl,
+  write(BlackRings),nl,
   game_black(NewWhiteGameState,Winner,NewWhiteRings,BlackRings,NewBlackGameState,NewBlackRings),
   play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
@@ -57,11 +59,13 @@ game_white(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
 
 
 
-game_black(GameState,X,Rings_black,Rings_black,NewGameState,NewRings):-
+
+game_black(GameState,X,Rings_white,Rings_black,NewGameState,NewRings):-
+
   /*GameState\=final_board_black,
   GameState\=final_board_black,*/
   nl,
-  write('Player Black'),
+  write('Player black'),
   nl,
   read_option(Option),
   check_option(Option,Rings_black,NewOption),
