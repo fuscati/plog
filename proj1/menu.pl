@@ -1,9 +1,13 @@
 
 play:-
     printMenu,
-    askMenuOption,
-    read(Input),
-    manageInput(Input).
+    repeat,
+    getInput(Input),
+    (call(manageInput(Input)) -> true, !; fail).
+
+getInput(Input) :-
+  askMenuOption,
+  read(Input).
 
 manageInput(1) :-
     startGame('P','P'),
@@ -25,9 +29,7 @@ manageInput(0) :-
 
 manageInput(_Other) :-
     write('\nERROR: that option does not exist.\n\n'),
-    askMenuOption,
-    read(Input),
-    manageInput(Input).
+    fail.
 
 printMenu :-
     nl,nl,

@@ -148,5 +148,3 @@ get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,Direction
     DestinationRow-Row=Column-DestinationColumn,
     DirectionR is 1,
     DirectionC is -1.
-
-

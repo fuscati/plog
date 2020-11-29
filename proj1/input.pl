@@ -1,14 +1,12 @@
 read_option(Option):-
     write('  > Please select your play\n'),
     write('  > Add new ring: 1\n'),
-    write('  > Move ring: 2|| not implemented yet\n'),
-    read(Option),
-    write(Option).
+    write('  > Move ring: 2\n'),
+    read(Option).
 
 check_option(1,0,Option):-
     write('\nYou have 0 Rings. You cannot add a ring\n'),
-    read_option(Option),
-    check_option(Option,0).
+    fail.
 
 check_option(1,_,Option):-
 Option=1.
@@ -16,12 +14,10 @@ Option=1.
 check_option(2,_,Option):-
 Option=2.
 
-
 check_option(Option,Rings,Option):-
     Option>2,
     write('\nInvalid Option. Try again\n'),
-    read_option(Option),
-    check_option(Option).
+    fail.
 
 read_add_ring(0,Player,Row,Column,NRow):-
     write('\nNot enough rings! Choose another option\n'),
@@ -34,10 +30,8 @@ read_add_ring(Rings,Player,Row,Column,NRow):-
     getCoords(NRow,Column).
 
 read_move_ring(Player,Row,Column,NRow):-
-    write('\nPlease select what ring you want to move\n'),
-    getCoords(NRow,Column),
-    nl,
-    format('Row: ~w', [NRow, Column]).
+    write('\nPlease select which ring you want to move\n'),
+    getCoords(NRow,Column).
 
 read_ball_from_move(Player,Column,NRow):-
     write('\nPlease select from where you want to move a ball\n'),
@@ -59,12 +53,14 @@ getCoords(Row,Column):-
     manageRow(Row).
 
 manageRow(NewRow) :-
+    repeat,
     readRow(Row),
-    validateRow(Row, NewRow).
+    (call(validateRow(Row, NewRow)) -> true, !; fail).
 
 manageColumn(NewColumn) :-
+    repeat,
     readColumn(Column),
-    validateColumn(Column, NewColumn).
+    (call(validateColumn(Column, NewColumn)) -> true, !; fail).
 
 readRow(Row) :-
     write('  > Row    '),
@@ -87,10 +83,8 @@ validateRow('D', 3).
 validateRow('E', 4).
 
 validateRow(_Row, NewRow) :-
-    nl, write(NewRow),
     write('ERROR: That row is not valid!\n\n'),
-    readRow(Input),
-    validateRow(Input, NewRow).
+    fail.
 
 validateColumn(0, 0).
 
@@ -102,8 +96,6 @@ validateColumn(3, 3).
 
 validateColumn(4, 4).
 
-
 validateColumn(_Column, NewColumn) :-
     write('ERROR: That column is not valid!\n\n'),
-    readColumn(Input),
-    validateColumn(Input, NewColumn).
+    fail.
