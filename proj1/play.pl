@@ -86,15 +86,22 @@ check_possibilities([]) :-
 
 check_possibilities([_|_]).
 
+get_move_ball_possibilities(GameState,Player,Possibilities):-
+  setof([[Row_from,Column_from],[Column_to,Row_to]],can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,1,Vault), Possibilities),
+  nl,
+  write('Move Ball Possibilities: '),
+  write(Possibilities).
+
 %trata de todo o procedimento de mexer uma bola, ler as coordenadas das casas inicial e final
 %verifica se pode mover, se se poder mover move, dá display e realiza o vaulting se Vault for 1
 read_move_ball(GameState,Player,NGameState):-
+    get_move_ball_possibilities(GameState,Player,Possibilities),
     nl,
     read_ball_from_move(Player,Column_from,Row_from),
     check_ball_from_move(Player,GameState,Row_from,Column_from),
     read_ball_to_move(Player,Column_to,Row_to),
     check_ball_to_move(Player,GameState,Row_to,Column_to),
-    can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool,Vault),
+    can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,Bool,Vault),
     repeat_can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool,Vault),
     move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player),
     display_game(NewGameState,Player,Rings),
@@ -110,7 +117,7 @@ repeat_can_move(GameState,Player,Row_from,_olumn_from, Column_to, Row_to,0,Vault
   check_ball_from_move(Player,GameState,Row_from,Column_from),
   read_ball_to_move(Player,Column_to,Row_to),
   check_ball_to_move(Player,GameState,Row_to,Column_to),
-  can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool1,Vault),
+  can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,Bool1,Vault),
   repeat_can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool1).
 
 get_option(Option,Rings) :-

@@ -90,8 +90,6 @@ can_vault_cycle(Row,Column,DirectionR,DirectionC,First_white,First_black,Bool,Ga
     AuxC is Column + DirectionC,
     get_ball(AuxC,AuxR,Ball,GameState),
     ball_to_color(Ball,Color),
-    nl,write('Vault_cycle values: Row, Column: '),write(Row),write(' ,'),write(Column),nl,
-    write('Ball: '),write(Ball),nl,
     can_recolocate(Color,AuxR,AuxC,GameState,First_white,First_black,Bool1,LastRow,LastColumn,NFirst_white,NFirst_black),
     can_vault_cycle(AuxR,AuxC,DirectionR,DirectionC,NFirst_white,NFirst_black,Bool2,GameState,LastRow,LastColumn),
     Bool is Bool1*Bool2.
@@ -173,13 +171,9 @@ can_recolocate('white',AuxR,AuxC,_GameState,0,_First_black,1,_LastRow,_LastColum
 %verifica se pode recolocar, ou seja, se a lista de soluções do findall tiver mais que 0 elementos, sem contar com a casa final
 can_recolocate(Color,_AuxR,_AuxC,GameState,First_white,First_black,Bool,LastRow,LastColumn,NFirst_white,NFirst_black):-
     findall([Column,Row], empty_ring_color(Column, Row, GameState,Color),L),
-    nl,write('------------------'),nl,write(L),nl,write('------------------'),nl,
     length(L,Bool1),
     is_first_member(LastRow,LastColumn,L,BoolAux),
-    nl,write('Last Row / Last Column'), write(LastRow), write(' '),write(LastColumn),nl,
-
     Bool is Bool1-BoolAux,
-    write('Bool: '),write(Bool),nl,
     color_to_first(Color,First_white,First_black,NFirst_white,NFirst_black).
 
 %verifica se a ultima celula é o primeiro membro da lista do findall
@@ -206,30 +200,28 @@ empty_ring_color(Column, Row, GameState,Color):-
 
 %verifica se pode ser efetuado o movimento da bola,
 %verificando se sao casas adjacentes, se a casa final não tem bola, se a casa final tem um anel da cor da bola
-can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vault):-
-    Bool is 1,
-    is_adjacent(Row, DestinationRow, Value),
-    Bool1 is Bool*Value,
-    Bool is Bool1,
-    is_adjacent(Column, DestinationColumn, Value),
-    Bool1 is Bool*Value,
-    Bool is Bool1,
+can_move(GameState,Player,Row,Column, DestinationRow, DestinationColumn,Bool,Vault):-
+    is_same(Row,Column, DestinationRow, DestinationColumn,Bool1_aux),
+    (Bool1_aux=:=0 -> Bool1 is 1; Bool1 is 0),
+    is_adjacent(Row, DestinationRow, Bool2),
+    is_adjacent(Column, DestinationColumn, Bool3),
     get_ball(Column, Row, Ball, GameState),
+    get_ball(DestinationColumn, DestinationRow, FinalBall, GameState),
+    is_empty(FinalBall,Bool6),
     ball_to_color(Ball,Color),
-    compare_color(Color,Player,Value),
-    Bool1 is Bool*Value,
-    Bool is Bool1,
+    compare_color(Color,Player,Bool4),
     get_top_ring( DestinationRow,DestinationColumn, Ring, GameState),
     ring_to_color(Ring,Color),
-    compare_color(Color,Player,Value),
-    Bool1 is Bool*Value,
-    Bool is Bool1,
+    compare_color(Color,Player,Bool5),
+    Bool is Bool1*Bool2*Bool3*Bool4*Bool5*Bool6,
     (Bool>0->Vault is 0;true).
 
 %o can_move anterior falhou, por isso tenta com vaulting
-can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vault):-
+can_move(GameState,Player,Row,Column, DestinationRow, DestinationColumn,Bool,Vault):-
     Bool1 is 1,
     get_ball(Column, Row, Ball, GameState),
+    get_ball(DestinationColumn, DestinationRow, FinalBall, GameState),
+    is_empty(FinalBall,Bool6),
     ball_to_color(Ball,Color),
     compare_color(Color,Player,Value),
     Bool2 is Bool1*Value,
@@ -238,8 +230,8 @@ can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vau
     compare_color(Color,Player,Value),
     Bool3 is Bool2*Value,
     can_vault(Row,Column, DestinationColumn, DestinationRow,Bool_aux,GameState,Ball),
-    nl,write('CAN VAULT: Bool: '),write(Bool_aux),nl,
-    Bool is Bool3*Bool_aux,
+    Bool4 is Bool3*Bool_aux*Bool6,
+    (Bool4>=1 -> Bool is 1;Bool is 0),
     Vault is Bool.
 
 %efetua o movimento da bola, substituindo na celula inicial por uma bola vazia e na celula final pela bola
