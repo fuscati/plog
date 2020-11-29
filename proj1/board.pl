@@ -1,5 +1,5 @@
 
-
+%board inicial
 initial_board([
     [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],  [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
     [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
@@ -8,6 +8,7 @@ initial_board([
     [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]]
 ]).
 
+%board de teste para vaulting
 vault_board([
     [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring],  [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring]],
     [[white_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,white_ring], [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty]],
@@ -16,6 +17,7 @@ vault_board([
     [[empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],           [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],            [empty,empty,empty,empty,empty,empty,empty,empty,empty,empty,empty],        [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring],  [black_ball,empty,empty,empty,empty,empty,empty,empty,empty,empty,black_ring]]
 ]).
 
+%template de board de vitória do jogador branco
 final_board_white([
     [[_,_],[_,_],[_,_],[_,_],[_,_]],
     [[_,_],[_,_],[_,_],[_,_],[_,_]],
@@ -24,6 +26,7 @@ final_board_white([
     [[_,_],[_,_],[_,_],[white_ball,_],[white_ball,_]]
 ]).
 
+%template de board de vitória do jogador preto
 final_board_black([
     [[black_ball,_],[black_ball,_],[_,_],[_,_],[_,_]],
     [[black_ball,_],[_,_],[_,_],[_,_],[_,_]],
@@ -33,6 +36,7 @@ final_board_black([
 ]).
 
 
+%transforma bolas e anéis em símbolos para a impressão
 symbol(empty,S) :- S=' '.
 symbol(black_ball,S) :- S='B'.
 symbol(white_ball,S) :- S='W'.
@@ -42,6 +46,7 @@ symbol(black_white_ring,S) :- S='+'.
 symbol(white_black_ring,S) :- S='+'.
 
 
+%transforma números em letras
 letter(0, L) :- L='A'.
 letter(1, L) :- L='B'.
 letter(2, L) :- L='C'.
@@ -52,6 +57,7 @@ print_rings('white'):-write('?'),nl.
 print_rings('black'):-write('?'),nl.
 
 
+%imprime o tabuleiro
 print_board(GameState,Player,Rings):-
     nl,
     write('   | 0 | 1 | 2 | 3 | 4 |\n'),
@@ -64,6 +70,7 @@ print_board(GameState,Player,Rings):-
     write(Rings).
 
 
+%imprime a matriz do tabuleiro
 print_matrix([], 5).
 print_matrix([Head|Tail], N) :-
     letter(N, L),
@@ -84,7 +91,7 @@ print_matrix([Head|Tail], N) :-
     write('\n---|---|---|---|---|---|\n'),
     print_matrix(Tail, N1).
 
-
+%imprime a primeira linha de simbolos
 print_symbol_line1([]).
 print_symbol_line1([Head|Tail]) :-
     print_symbol_ring(Head,1),
@@ -93,6 +100,7 @@ print_symbol_line1([Head|Tail]) :-
     write('|'),
     print_symbol_line1(Tail).
 
+%imprime a segunda linha de simbolos
 print_symbol_line2([]).
 print_symbol_line2([Head|Tail]) :-
     print_symbol_ring(Head,9),
@@ -101,6 +109,7 @@ print_symbol_line2([Head|Tail]) :-
     write('|'),
     print_symbol_line2(Tail).
 
+%imprime a terceira linha de simbolos
 print_symbol_line3([]).
 print_symbol_line3([Head|Tail]) :-
     print_symbol_ring(Head,8),
@@ -109,6 +118,7 @@ print_symbol_line3([Head|Tail]) :-
     write('|'),
     print_symbol_line3(Tail).
 
+%imprime uma linha do tabuleiro
 print_line([]).
 print_line([Head|Tail]) :-
     print_symbol_ring(Head,10),
@@ -117,7 +127,7 @@ print_line([Head|Tail]) :-
     write('|'),
     print_line(Tail).
 
-
+%imprime o simbolo de um anel
 print_symbol_ring([Head|Tail],0):-
     symbol(Head,S),
     write(S).
@@ -127,7 +137,7 @@ print_symbol_ring([Head|Tail],N):-
     N1 is N-1,
     print_symbol_ring(Tail,N1).
 
-
+%imprime uma bola
 print_ball([Head|Tail]) :-
     symbol(Head,S),
     write(S).
