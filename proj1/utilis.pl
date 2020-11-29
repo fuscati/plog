@@ -32,7 +32,7 @@ get_top_ring_index([_|T],StartIndex,Index) :-
   get_top_ring_index(T,NextIndex, Index).
 
 get_top_ring(Row, Column, Ring, GameState) :-
-  get_cell(Row, Column, [_|Rings], GameState),
+  get_cell(Column,Row,[_|Rings], GameState),
   get_top_ring_cycle(Rings, Ring).
 
 get_top_ring_cycle([], 'empty').
@@ -92,6 +92,61 @@ clone([H|T],[H|Z]):- clone(T,Z).
 
 ball_to_color('white_ball','white').
 ball_to_color('black_ball','black').
+ball_to_color('empty','empty').
 
 ring_to_color('white_ring','white').
 ring_to_color('black_ring','black').
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row=DestinationRow,
+    DirectionR is 0,
+    Column > DestinationColumn,
+    DirectionC is -1.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row=DestinationRow,
+    DirectionR is 0,
+    Column < DestinationColumn,
+    DirectionC is 1.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row>DestinationRow,
+    DirectionR is -1,
+    Column = DestinationColumn,
+    DirectionC is 0.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row<DestinationRow,
+    DirectionR is 1,
+    Column = DestinationColumn,
+    DirectionC is 0.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row<DestinationRow,
+    Column<DestinationColumn,
+    DestinationRow-Row=DestinationColumn-Column,
+    DirectionR is 1,
+    DirectionC is 1.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row>DestinationRow,
+    Column>DestinationColumn,
+    DestinationRow-Row=DestinationColumn-Column,
+    DirectionR is -1,
+    DirectionC is -1.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row>DestinationRow,
+    Column<DestinationColumn,
+    Row-DestinationRow=DestinationColumn-Column,
+    DirectionR is -1,
+    DirectionC is 1.
+
+get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC):-
+    Row<DestinationRow,
+    Column>DestinationColumn,
+    DestinationRow-Row=Column-DestinationColumn,
+    DirectionR is 1,
+    DirectionC is -1.
+
+
