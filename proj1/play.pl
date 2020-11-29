@@ -1,27 +1,45 @@
 startGame(_Player1, _Player2) :-
     initial(GameState),
-    play_loop(GameState,Winner,8,8),
+    play_loop(GameState,-1,8,8),
     nl,
     display_winner(Winner).
 
-play_loop(GameState,Winner,WhiteRings,BlackRings) :-
-  /*GameState\=final_board_white,
-  GameState\=final_board_black,*/
 
-  game_white(GameState,Winner,WhiteRings,BlackRings,NewWhiteGameState,NewWhiteRings),
-  game_black(NewWhiteGameState,Winner,NewWhiteRings,BlackRings,NewBlackGameState,NewBlackRings),
+play_loop(_,1,_,_).
+play_loop(_,2,_,_).
+
+winner_white(GameState,Winner):-
+  GameState=final_board_white,
+  Winner is 1.
+
+winner_white(_,-1).
+
+winner_black(GameState,Winner):-
+  GameState=final_board_black,
+  Winner is 2.
+
+winner_black(_,-1).
+
+play_loop(GameState,Winner,WhiteRings,BlackRings) :-
+
+  game_white(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings),
+  winner_white(NewWhiteGameState,Winner),!,
+  game_black(NewWhiteGameState,Winner,BlackRings,NewBlackGameState,NewBlackRings),
+  winner_black(NewBlackGameState,Winner),!,
   play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
 initial(GameState) :-
-    initial_board(GameState).
+    vault_board(GameState).
+    %initial_board(GameState).
 
-display_game(GameState, Player, Rings) :-
-    print_board(GameState,Player,Rings).
-
-display_winner(0):-
-write('White won!!!!').
+display_game(GameState, Player, Rings).
+%:-
+%print_board(GameState,Player,Rings).
 
 display_winner(1):-
+write('White won!!!!').
+
+display_winner(2):-
 write('Black won!!!').
 
 option(1,GameState,Player,Rings,NewRings,NewGameState):-
@@ -49,9 +67,8 @@ read_move_ball(GameState,Player,NewGameState):-
 
 
 game_white(GameState,X,Rings_white,NewGameState,NewRings):-
-  /*GameState\=final_board_white,
-  GameState\=final_board_black,*/
-  display_game(NewGameState,'white',Rings_white),
+
+  display_game(GameState,'white',Rings_white),
   nl,
   write('Player White'),
   nl,
@@ -64,8 +81,7 @@ game_white(GameState,X,Rings_white,NewGameState,NewRings):-
 
 game_black(GameState,X,Rings_black,NewGameState,NewRings):-
 
-  /*GameState\=final_board_black,
-  GameState\=final_board_black,*/
+  display_game(GameState,'black',Rings_black),
   nl,
   write('Player black'),
   nl,
