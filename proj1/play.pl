@@ -88,7 +88,7 @@ read_move_ball(GameState,Player,NGameState):-
     vault(NewGameState,Row_from,Column_from,Row_to,Column_to,NGameState,Player,Vault).
 
 repeat_can_move(_GameState,_Player,_Row_from,_Column_from, _Column_to, _Row_to,Bool,_Vault):-
-Bool>1.
+Bool>0.
 
 repeat_can_move(GameState,Player,Row_from,_olumn_from, Column_to, Row_to,0,Vault):-
   nl,write('You cant move there'),nl,

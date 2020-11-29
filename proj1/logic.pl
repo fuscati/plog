@@ -94,7 +94,7 @@ remove_ring(GameState,Player,Row,Column,RingsNumber,NewGameState):-
         display_game(NewGameState,Player,Rings).
 
     vault(NewGameState,_Row_from,_Column_from,_Row_to,_Column_to,NGameState,_Player,Vault):-
-        Vault=0,
+       Vault is 0,
         NGameState = NewGameState.
 
     vault_cycle(AuxR,AuxC,_,_,_,_,Bool,_,LastRow,LastColumn):-
@@ -190,7 +190,8 @@ remove_ring(GameState,Player,Row,Column,RingsNumber,NewGameState):-
         ring_to_color(Ring,Color),
         compare_color(Color,Player,Value),
         Bool1 is Bool*Value,
-        Bool is Bool1.
+        Bool is Bool1,
+        (Bool>0->Vault is 0;true).
 
     can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vault):-
         Bool1 is 1,
