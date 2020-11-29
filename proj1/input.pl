@@ -1,7 +1,7 @@
 read_option(Option):-
     write('  > Please select your play\n'),
     write('  > Add new ring: 1\n'),
-    write('  > Move ring: 2|| not implemented yet\n'),
+    write('  > Move ring: 2\n'),
     read(Option),
     write(Option).
 

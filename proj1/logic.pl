@@ -53,7 +53,7 @@ remove_ring(GameState,Player,Row,Column,RingsNumber,NewGameState):-
     get_top_ring_index(Rings,0,Index),
     replace_ring(GameState,'empty',Row,Column,Ball,Rings,Index,NewGameState).
 
-is_same(AuxR,AuxC,DestinationRow, DestinationColumn,Bool2):-
+is_same(AuxR,AuxC,DestinationRow, DestinationColumn,Bool):-
     AuxR=DestinationRow,
     AuxC=DestinationColumn,
     Bool is 1.
@@ -68,6 +68,10 @@ can_vault(Row,Column, DestinationColumn, DestinationRow,Bool,GameState,Ball):-
     get_direction(Row,Column, DestinationColumn, DestinationRow,DirectionR,DirectionC),
     can_vault_cycle(AuxR,AuxC,DirectionR,DirectionC,1,1,Bool,GameState,DestinationRow,DestinationColumn).
 
+can_vault_cycle(AuxR,AuxC,_,_,_,_,Bool,_,LastRow,LastColumn):-
+    AuxR=LastRow,
+    AuxC=LastColumn,
+    Bool is 1.
 
 can_vault_cycle(Row,Column,DirectionR,DirectionC,First_white,First_black,Bool,GameState,LastRow,LastColumn):-
     AuxR is Row + DirectionR,
@@ -80,11 +84,58 @@ can_vault_cycle(Row,Column,DirectionR,DirectionC,First_white,First_black,Bool,Ga
     can_vault_cycle(AuxR,AuxC,DirectionR,DirectionC,NFirst_white,NFirst_black,Bool2,GameState,LastRow,LastColumn),
     Bool is Bool1*Bool2.
 
-can_vault_cycle(AuxR,AuxC,_,_,_,_,Bool,_,LastRow,LastColumn):-
-    AuxR=LastRow,
-    AuxC=LastColumn,
-    Bool is 1.
 
+vault(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player,Vault):-
+    Vault>0,
+    get_ball(AuxC,AuxR,Ball,GameState),
+    ball_to_color(Ball,Color),
+    AuxC is Column_from,
+    AuxR is Row_from,
+    get_direction(Row_from,Column_from, Column_to, Row_to,DirectionR,DirectionC),
+    vault_cycle(AuxR,AuxC,DirectionR,DirectionC,GameState,Row_to,Column_to,NewGameState),
+    display_game(NewGameState,Player,Rings).
+
+vault(NewGameState,_Row_from,_Column_from,_Row_to,_Column_to,NGameState,_Player,Vault):-
+    Vault=0,
+    NGameState = NewGameState.
+
+vault_cycle(AuxR,AuxC,_,_,_,_,Bool,_,LastRow,LastColumn):-
+    AuxR=LastRow,
+    AuxC=LastColumn.
+
+vault_cycle(Row,Column,DirectionR,DirectionC,GameState,LastRow,LastColumn,NGameState):-
+    AuxR is Row + DirectionR,
+    AuxC is Column + DirectionC,
+    is_same(AuxR,AuxC,LastRow,LastColumn,Bool),
+    (Bool=:=0->
+    (get_ball(AuxC,AuxR,Ball,GameState),
+    ball_to_color(Ball,Color),
+    recolocate(Color,AuxR,AuxC,GameState,LastRow,LastColumn,NewGameState),
+    display_game(NewGameState,Player,Rings),
+    vault_cycle(AuxR,AuxC,DirectionR,DirectionC,NewGameState,LastRow,LastColumn,NGameState));NGameState = GameState 
+    ).
+
+
+recolocate(Color,Row,Column,GameState,LastRow,LastColumn,NewGameState):-
+    validateRow(AuxR,Row),
+    nl,write('You are now moving the '),write(Color),write(' ball on '),write(Column),write(AuxR),nl,  
+    read_ball_to_move(Player,Column_to,Row_to),
+    can_free_move(Color,GameState,Row_to,Column_to,Row,Column),
+    move_ball(GameState,Row,Column,Row_to,Column_to,NewGameState,Color).
+
+can_free_move(Color,GameState,Row_to,Column_to,Row_from,Column_from):-
+    get_top_ring(Row_to,Column_to,Ring,GameState),
+    ring_to_color(Ring,Color_ring),
+    Color_ring=Color,
+    get_ball(Column_to,Row_to,Ball,GameState),
+    Ball='empty'.
+
+can_free_move(Color,GameState,Row_to,Column_to,Row_from,Column_from):-
+    nl,write('Cant move there. Try again'),nl,
+    read_ball_from_move(Player,Column_from,Row_from),   
+    read_ball_to_move(Player,Column_to,Row_to),
+    can_free_move(Color,GameState,Row_to,Column_to,Row_from,Column_from).
+    
 
 can_recolocate('empty',_,_,_GameState,_First_white,_First_black,1,_LastRow,_LastColumn,_NFirst_white,_NFirst_black).
 can_recolocate('black',4,4,_GameState,_First_white,_First_black,0,_LastRow,_LastColumn,_NFirst_white,_NFirst_black).
@@ -130,7 +181,7 @@ empty_ring_color(Column, Row, GameState,Color):-
     ring_to_color(Ring,Color),
     get_top_ring(Row, Column, Ring, GameState).
 
-can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
+can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vault):-
     Bool is 1,
     is_adjacent(Row, DestinationRow, Value),
     Bool1 is Bool*Value,
@@ -149,7 +200,7 @@ can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     Bool1 is Bool*Value,
     Bool is Bool1.
 
-can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
+can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool,Vault):-
     Bool1 is 1,
     get_ball(Column, Row, Ball, GameState),
     ball_to_color(Ball,Color),
@@ -160,7 +211,11 @@ can_move(GameState,Player,Row,Column, DestinationColumn, DestinationRow,Bool):-
     compare_color(Color,Player,Value),
     Bool3 is Bool2*Value,
     can_vault(Row,Column, DestinationColumn, DestinationRow,Bool_aux,GameState,Ball),
-    Bool is Bool3*Bool_aux.
+    nl,write('CAN VAULT: Bool: '),write(Bool_aux),nl,
+    Bool is Bool3*Bool_aux,
+    Vault is Bool.
+
+
 
 move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player):-
     replace_ball(GameState,Row_from,Column_from,'empty',NGameState),
