@@ -50,7 +50,7 @@ Os jogo é controlado com inputs númericos, por exemplo na escolha de adicionar
 
 ### Execução das jogadas
 As jogadas são lidas como um conjunto coluna linha, como descrito no ponto anterior, inseridos separadamente. Numa fase inicial apenas é verificado se esses valores se encontram dentro dos limites do tabuleiro.
-No caso do nosso Mitsudomoe há 4 tipos de jogadas diferentes, adicionar um anel, mover um anel, mover uma bola e recolocar uma bola. Para se adicionar uma bola é preciso fornecer as coordenadas da bola e as coordenadas de destino. No caso de adicionar um anel só é preciso forncer as coordenadas de destino. O caso de mover um anel é semelhante ao de mover uma bola e o de recolocar uma bola só necessita de coordenadas de destino. Obviamente os 4 tipos são processados de forma diferente para serem validados e jogados, de modo que apenas um predicado valid_moves ou move não é suficiente. Por esse motivo, temos os predicados move_ball, recolocate, move_ring, add_ring e valid_moves_ball, valid_moves_ring, valid_moves_add_ring, valid_moves_recolocate.
+No caso do nosso Mitsudomoe há 4 tipos de jogadas diferentes, adicionar um anel, mover um anel, mover uma bola e recolocar uma bola. Para se adicionar uma bola é preciso fornecer as coordenadas da bola e as coordenadas de destino. No caso de adicionar um anel só é preciso forncer as coordenadas de destino. O caso de mover um anel é semelhante ao de mover uma bola e o de recolocar uma bola só necessita de coordenadas de destino. Obviamente os 4 tipos são processados de forma diferente para serem validados e jogados, de modo que apenas um predicado valid_moves ou move não é suficiente. Por esse motivo, temos os predicados move_ball, recolocate, move_ring, add_ring e get_add_ring_possibilities,get_remove_ring_possibilities, get_move_ball_possibilities, get_recolocate_possibilities.
 
 - adicionar anel: Verifica-se se o jogador tem mais que 0 anéis e se a casa onde tenta adicionar o anel não tem nenhuma bola, com o predicado get_ball. 
 - mover anel: Verifica-se que a casa inicial tem um anel da cor do jogador. Se tiver segue o mesmo protocolo que adicionar o anel.
@@ -62,10 +62,11 @@ A verificação de final de jogo é realida com um predicado que compara o estad
 Tmabém é possível que o jogo chegue ao fim se não for encontrada nenhuma jogada possível quer para os anéis quer para as bolas.
 
 ## Avaliação do tabuleiro 
-O tabuleiro vale mais quanto mais perto estiverem as bolas do jogador de casas finais. Cada casa final já conseguida aumenta o valor do tabuleiro. Os anéis são valorizados se estiverem perto de bolas da sua cor, preferencialmente mais próximo de casas finais.
+O tabuleiro vale mais quanto mais perto estiverem as bolas do jogador de casas finais. Os anéis são valorizados se adjacentes a bolas da sua cor, preferencialmente mais próximo de casas finais.
 
 ## Jogada de computador
-Para a escolha da jogada do computador é efetuado um findall de todas as jogadas possíveis e respetivo valor. O computador escolhe a que tiver pontuação mais alta
+Só nos foi possível implementar um bot rudimentar dada a complexidade do jogo. Este bot adiciona anéis até já não ter mais e depois começa a move-los. Para tal, utiliza findall's para descobrir as jogadas possíveis e joga anéis adjacentemente a bolas, para não perder o jogo e ir progredindo no tabuleiro. Para jogar a bola seleciona uma jogada aleatória das jogadas possíveis.
+Fizemos uma função para avaliar o tabuleiro, mas não temos nenhum bot a utilizá-la.
 
 ## Conclusões 
-O Mitsudomoe jogo é um jogo muito complexo, com muitas dinâmicas, o que apresentou bastantes problemas no seu desensenvolvimento. Reconhecemos algumas limitações do trabalho, nomeadamente blabla, que poderiam ser melhoradas da seguinte forma blabla.
+O Mitsudomoe jogo é um jogo muito complexo, com muitas dinâmicas, o que apresentou bastantes problemas no seu desensenvolvimento. Reconhecemos algumas limitações do trabalho, nomeadamente a existência de apenas um bot, que não está preparado para vaulting.

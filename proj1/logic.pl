@@ -383,6 +383,7 @@ is_adjacent_to_ball_cycle(Column,Row,GameState,[[Column_Ball,Row_Ball]|T],Bool):
     Bool is Bool1*Bool_aux.
 
 
-
+get_recolocate_possibilities(Color,GameState,LastRow,LastColumn):-
+    findall([Column,Row], empty_ring_color(Column, Row, GameState,Color),L).
 
   
