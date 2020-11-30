@@ -43,8 +43,8 @@ play_loop2(GameState,Winner,WhiteRings,BlackRings) :-
   %game_white(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings),
   %winner_white(NewWhiteGameState,Winner),!,
   game_bot(GameState,Winner,BlackRings,NewBlackGameState,NewBlackRings),
-  winner_black(NewBlackGameState,Winner),!,
-  play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
+  winner_black(NewBlackGameState,Winner),!.
+  %play_loop2(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
 %constrói o estado de jogo inicial
 initial(GameState) :-
@@ -52,8 +52,7 @@ initial(GameState) :-
     initial_board(GameState).
 
 %imprime o jogo
-display_game(GameState, Player, Rings).
-%:- print_board(GameState,Player,Rings).
+display_game(GameState, Player):- print_board(GameState,Player).
 
 display_winner(1):-
 write('White won!!!!').
@@ -93,11 +92,12 @@ option(2,GameState,Player,Rings,NewRings,NewGameState):-
 option_bot(1,GameState,Player,Rings,NewRings,NewGameState):-
     get_add_ring_possibilities(GameState,Rings,Possibilities),
     (call(check_possibilities(Possibilities)) -> true, !; fail),
-    get_easy_bot_decision_rings(Possibilities,Column,NRow),
-    check_add_ring(GameState,NRow,Column,Rings,Bool),
-    add_ring(GameState,Player,NRow,Column,Rings,NewRings,NewGameState).
+    get_easy_bot_decision_rings(GameState,Player,Column,Row,Possibilities),
+    check_add_ring(GameState,Row,Column,Rings,Bool),
+    add_ring(GameState,Player,Row,Column,Rings,NewRings,NewGameState).
 
-get_easy_bot_decision_rings([[Column,Row]|_],Column,Row).
+
+
 
 get_easy_bot_decision_ball([[[ColumnFrom,RowFrom],[ColumnTo,RowTo]]|_],ColumnFrom,RowFrom,ColumnTo,RowTo).
 
@@ -131,7 +131,8 @@ read_move_ball(GameState,Player,NGameState):-
     can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,Bool,Vault),
     repeat_can_move(GameState,Player,Row_from,Column_from, Column_to, Row_to,Bool,Vault),
     move_ball(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player),
-    display_game(NewGameState,Player,Rings),
+    display_game(NewGameState,Player),
+
     vault(NewGameState,Row_from,Column_from,Row_to,Column_to,NGameState,Player,Vault).
 
 read_move_ball_bot(GameState,Player,ColumnFrom,RowFrom,ColumnTo,RowTo,NGameState):-
@@ -140,7 +141,6 @@ read_move_ball_bot(GameState,Player,ColumnFrom,RowFrom,ColumnTo,RowTo,NGameState
     can_move(GameState,Player,RowFrom,ColumnFrom,RowTo,ColumnTo,Bool,Vault),
     repeat_can_move(GameState,Player,RowFrom,ColumnFrom,ColumnTo,RowTo,Bool,Vault),
     move_ball(GameState,RowFrom,ColumnFrom,RowTo,ColumnTo,NewGameState,Player),
-    display_game(NewGameState,Player,Rings),
     vault(NewGameState,RowFrom,ColumnFrom,RowTo,ColumnTo,NGameState,Player,Vault).
 
 repeat_can_move(_GameState,_Player,_Row_from,_Column_from, _Column_to, _Row_to,Bool,_Vault):-
@@ -165,39 +165,39 @@ get_option(Option,Rings) :-
 %jogadas das brancas, le a opção, trata a opcao e, dá display e trata o movimento da bola
 game_white(GameState,X,Rings_white,NewGameState,NewRings):-
 
-  display_game(GameState,'white',Rings_white),
+  display_game(GameState,'white'),
+  display_rings(Rings_white),
   nl,
   write('Player White'),
   repeat,
   get_option(Option,Rings_white),
   (call(option(Option,GameState,'white',Rings_white,NewRings,NGameState)) -> true, !; fail),
-  display_game(NGameState,'white',NewRings),
-  read_move_ball(NGameState,'white',NewGameState),
-  evaluate(NewGameState,'white',Score),
-  nl,write('----------------------'),nl,write('Evaluation: '),write(Score),nl,write('----------------------'),nl.
+  display_game(NGameState,'white'),
+  read_move_ball(NGameState,'white',NewGameState).
 
 %jogadas das pretas, le a opção, trata a opcao e, dá display e trata o movimento da bola
 game_black(GameState,X,Rings_black,NewGameState,NewRings):-
 
-  display_game(GameState,'black',Rings_black),
+  display_game(GameState,'black'),
+  display_rings(Rings_black),
   nl,
   write('Player black'),
   repeat,
   get_option(Option,Rings_black),
   (call(option(NewOption,GameState,'black',Rings_black,NewRings,NGameState)) -> true, !; fail),
-  display_game(NGameState,'black',NewRings),
+  display_game(NGameState,'black'),
   read_move_ball(NGameState,'black',NewGameState).
 
 game_bot(GameState,X,Rings_black,NewGameState,NewRings) :-
-  display_game(GameState,'black',Rings_black),
+  display_game(GameState,'black'),
   nl,
   write('Player black'),
   option_bot(1,GameState,'black',Rings_black,NewRings,NGameState),
-  display_game(NGameState,'black',NewRings).
-  %read_move_ball(NGameState,'black',NewGameState).
-  %get_move_ball_possibilities(NGameState,'black',Possibilities),
-  %nl,
-  %write(Possibilities),
-  %get_easy_bot_decision_ball(Possibilities,ColumnFrom,RowFrom,ColumnTo,RowTo),
-  %format('\nCFrom: ~w RFrom: ~w CTo: ~w RTo: ~w', [ColumnFrom,RowFrom,ColumnTo,RowTo]).
-  %read_move_ball_bot(NGameState,'black',ColumnFrom,RowFrom,ColumnTo,RowTo,NewGameState).
+  display_game(NGameState,'black'),
+ 
+  get_move_ball_possibilities(NGameState,'black',Possibilities),
+  nl,
+  write(Possibilities),
+  get_easy_bot_decision_ball(Possibilities,ColumnFrom,RowFrom,ColumnTo,RowTo),
+  format('\nCFrom: ~w RFrom: ~w CTo: ~w RTo: ~w', [ColumnFrom,RowFrom,ColumnTo,RowTo]),
+  read_move_ball_bot(NGameState,'black',ColumnFrom,RowFrom,ColumnTo,RowTo,NewGameState).

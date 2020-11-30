@@ -97,6 +97,7 @@ can_vault_cycle(Row,Column,DirectionR,DirectionC,First_white,First_black,Bool,Ga
 %efetua o vaulting, seguindo o mesmo processo que o predicado can_vault
 vault(GameState,Row_from,Column_from,Row_to,Column_to,NewGameState,Player,Vault):-
     Vault>0,
+    display_game(GameState,Player),
     get_ball(AuxC,AuxR,Ball,GameState),
     ball_to_color(Ball,Color),
     AuxC is Column_from,
@@ -350,3 +351,38 @@ distance_to_corner(Column,Row,'black',Distance):-
     (D1>D2->Distance is D1;Distance is D2).
 
 
+get_easy_bot_decision_rings(GameState,Player,Column,Row,Possibilities):-
+    get_rings_next_to_balls(GameState,Player,Possibilities,NPossibilities),
+    get_Column_Row_bot(Column,Row,NPossibilities).
+
+get_Column_Row_bot(Column,Row,[H|T]):-
+    [Column,Row] = H.
+
+
+
+get_rings_next_to_balls(GameState,Player,Possibilities,NPossibilities):-
+
+    ball_to_color(Ball,Player),
+    findall([Column,Row],get_ball(Column,Row,Ball,GameState),Ball_Positions),
+
+    ring_to_color(Ring,Player),
+    findall([Column1,Row1],is_adjacent_to_ball(Column1,Row1,GameState,Ball_Positions,1),Adjacent_balls),
+
+    findall([Column,Row],(member([Column,Row],Possibilities),member([Column,Row],Adjacent_balls)),NPossibilities).
+    
+
+
+
+is_adjacent_to_ball(Column,Row,GameState,Ball_Positions,Bool):-
+    is_adjacent_to_ball_cycle(Column,Row,GameState,Ball_Positions,Bool).
+    
+is_adjacent_to_ball_cycle(_Column,_Row,_GameState,[],1).
+is_adjacent_to_ball_cycle(Column,Row,GameState,[[Column_Ball,Row_Ball]|T],Bool):-
+    are_adjacent(Column,Row,Column_Ball,Row_Ball,Bool_aux),
+    is_adjacent_to_ball_cycle(Column,Row,GameState,T,Bool1),
+    Bool is Bool1*Bool_aux.
+
+
+
+
+  

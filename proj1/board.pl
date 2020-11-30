@@ -58,16 +58,12 @@ print_rings('black'):-write('?'),nl.
 
 
 %imprime o tabuleiro
-print_board(GameState,Player,Rings):-
+print_board(GameState,Player):-
     nl,
     write('   | 0 | 1 | 2 | 3 | 4 |\n'),
     write('---|---|---|---|---|---|\n'),
     print_matrix(GameState, 0),
-    nl,
-    nl,
-    write('Aneis: '),
-    /*print_rings(Player).*/
-    write(Rings).
+    nl.
 
 
 %imprime a matriz do tabuleiro
@@ -141,3 +137,5 @@ print_symbol_ring([Head|Tail],N):-
 print_ball([Head|Tail]) :-
     symbol(Head,S),
     write(S).
+
+display_rings(Rings):-nl,write('Aneis: '),write(Rings),nl.
