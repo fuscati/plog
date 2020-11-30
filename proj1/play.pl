@@ -37,7 +37,8 @@ initial(GameState) :-
     initial_board(GameState).
 
 %imprime o jogo
-display_game(GameState, Player, Rings):- print_board(GameState,Player,Rings).
+display_game(GameState, Player, Rings).
+%:- print_board(GameState,Player,Rings).
 
 display_winner(1):-
 write('White won!!!!').
@@ -136,7 +137,9 @@ game_white(GameState,X,Rings_white,NewGameState,NewRings):-
   get_option(Option,Rings_white),
   (call(option(Option,GameState,'white',Rings_white,NewRings,NGameState)) -> true, !; fail),
   display_game(NGameState,'white',NewRings),
-  read_move_ball(NGameState,'white',NewGameState).
+  read_move_ball(NGameState,'white',NewGameState),
+  evaluate(NewGameState,'white',Score),
+  nl,write('----------------------'),nl,write('Evaluation: '),write(Score),nl,write('----------------------'),nl.
 
 %jogadas das pretas, le a opção, trata a opcao e, dá display e trata o movimento da bola
 game_black(GameState,X,Rings_black,NewGameState,NewRings):-

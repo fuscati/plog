@@ -289,3 +289,64 @@ is_empty(_,0).
 compare_color('white','white',1).
 compare_color('black','black',1).
 compare_color(_,_,0).
+
+evaluate(GameState,Player,Score):-
+    ball_to_color(Ball,Player),
+    findall([Column,Row],get_ball(Column,Row,Ball,GameState),Ball_Positions),
+    evaluate_balls_cycle(Player,Score1,Ball_Positions),
+
+    ring_to_color(Ring,Player),
+
+    findall([Column,Row],get_top_ring(Row,Column,Ring,GameState),Ring_Positions),
+    evaluate_rings_cycle(GameState,Player,Score2,Ring_Positions,Ball_Positions),
+
+    Score is Score1+Score2.
+
+
+
+
+evaluate_balls_cycle(_Player,0,[]).
+
+evaluate_balls_cycle(Player,Score,[Coord|T]):-
+    [Column,Row]=Coord,
+    distance_to_corner(Column,Row,Player,Distance),
+    evaluate_balls_cycle(Player,Score1,T),
+    Score is Score1-Distance.
+
+evaluate_rings_cycle(_GameState,_Player,0,[],_Ball_Positions).
+evaluate_rings_cycle(GameState,Player,Score,[[Column_Ring,Row_Ring]|T],Ball_Positions):-
+
+   distance_to_corner(Column_Ring,Row_Ring,Player,Distance),
+   evaluate_rings_subcycle(Column_Ring,Row_Ring,Ball_Positions,Adjacent_balls),
+
+   evaluate_rings_cycle(GameState,Player,Score1,T,Ball_Positions),
+
+   Score is Score1+(Adjacent_balls*3)-Distance.
+
+
+
+evaluate_rings_subcycle(_Column_Ring,_Row_Ring,[],0).
+evaluate_rings_subcycle(Column_Ring,Row_Ring,[[Column_Ball,Row_Ball]|T],Adjacent_balls):-
+    are_adjacent(Column_Ring,Row_Ring,Column_Ball,Row_Ball,Bool),
+    evaluate_rings_subcycle(Column_Ring,Row_Ring,T,Adjacent_balls1),
+    Adjacent_balls is Adjacent_balls1+Bool.
+
+
+are_adjacent(Column1,Row1,Column2,Row2,Bool):-
+    is_adjacent(Column1,Column2,Bool1),
+    is_adjacent(Row1,Row2,Bool2),
+    Bool is Bool1*Bool2.
+
+
+
+distance_to_corner(Column,Row,'white',Distance):-
+    D1 is 4-Column,
+    D2 is 4-Row,
+    (D1>D2->Distance is D1;Distance is D2).
+
+distance_to_corner(Column,Row,'black',Distance):-
+    D1 is Column,
+    D2 is Row,
+    (D1>D2->Distance is D1;Distance is D2).
+
+
