@@ -1,8 +1,20 @@
 
 %verifica se o anel pode ser adicionado, verificando se não há nenhuma bola nessa casa
-check_add_ring(GameState,Row,Column,Rings,Bool):-
+check_add_ring(Player,GameState,Row,Column,Rings,Bool):-
     get_ball(Column, Row, Ball, GameState),
     check_add_ring_decision(GameState,Row,Column,Ball,Rings,Bool).
+
+check_add_ring_bot(Player,GameState,Row,Column,Rings,Bool):-
+    get_ball(Column, Row, Ball, GameState),
+    get_top_ring(Row, Column, TopRing, GameState),
+    check_top_ring_bot(Player, TopRing),
+    check_add_ring_decision(GameState,Row,Column,Ball,Rings,Bool).
+
+check_top_ring_bot('white', 'black_ring').
+check_top_ring_bot('white', 'empty').
+check_top_ring_bot('black', 'white_ring').
+check_top_ring_bot('black', 'empty').
+check_top_ring_bot(_, _):- fail.
 
 %não há nenhuma bola, pode ser adicionado
 check_add_ring_decision(GameState,Row,Column,'empty',Rings,true).
@@ -54,7 +66,7 @@ check_remove_ring_decision('white',_,_,_,'empty','white_ring',true).
 
 check_remove_ring_decision('black',_,_,_,'empty','black_ring',true).
 
-%remove o anel da celula, identifica o anel do topo, ve o index e remove-o 
+%remove o anel da celula, identifica o anel do topo, ve o index e remove-o
 remove_ring(GameState,Player,Row,Column,RingsNumber,NewGameState):-
     get_rings(Column, Row, Rings, Ball, GameState),
     get_top_ring_index(Rings,0,Index),
@@ -136,7 +148,7 @@ recolocate(Color,Row,Column,GameState,LastRow,LastColumn,NewGameState):-
     can_free_move(Color,GameState,Row_to,Column_to,Row,Column),
     move_ball(GameState,Row,Column,Row_to,Column_to,NewGameState,Color).
 
-%verifica se pode movimentar uma bola livremente, sem as regras do jogo 
+%verifica se pode movimentar uma bola livremente, sem as regras do jogo
 %apenas verifica se na casa final não há uma bola e o anel do topo é da cor da bola
 can_free_move(Color,GameState,Row_to,Column_to,Row_from,Column_from):-
     get_top_ring(Row_to,Column_to,Ring,GameState),
@@ -181,7 +193,7 @@ is_first_member(_,_,[],0).
 is_first_member(FirstRow,FirstColumn,[[A,B]|T],Bool):-
     ([A,B]=[FirstColumn,FirstRow] -> Bool is 1;Bool is 0).
 
-%a primeira bola branca foi recolocada 
+%a primeira bola branca foi recolocada
 color_to_first('white',First_white,_,NFirst_white,_NFirst_black):-
 NFirst_white is 0.
 
@@ -351,37 +363,30 @@ distance_to_corner(Column,Row,'black',Distance):-
 
 get_easy_bot_decision_rings(GameState,Player,Column,Row,Possibilities):-
     get_rings_next_to_balls(GameState,Player,Possibilities,NPossibilities),
+    nl, write('Add Ring Possibilities: '), write(NPossibilities),
     get_Column_Row_bot(Column,Row,NPossibilities).
 
 get_Column_Row_bot(Column,Row,[H|T]):-
     [Column,Row] = H.
 
-
+get_coords_next_to_balls_aux(Column,Row,GameState,Ball_Positions,Bool) :-
+  is_adjacent_to_ball(Column,Row,GameState,Ball_Positions,Bool).
 
 get_rings_next_to_balls(GameState,Player,Possibilities,NPossibilities):-
-
     ball_to_color(Ball,Player),
     findall([Column,Row],get_ball(Column,Row,Ball,GameState),Ball_Positions),
-
     ring_to_color(Ring,Player),
-    findall([Column1,Row1],is_adjacent_to_ball(Column1,Row1,GameState,Ball_Positions,1),Adjacent_balls),
-
+    setof([Column1,Row1],is_position_adjacent_to_ball(Column1, Row1, Ball_Positions, true),Adjacent_balls),
     findall([Column,Row],(member([Column,Row],Possibilities),member([Column,Row],Adjacent_balls)),NPossibilities).
-    
-
-
 
 is_adjacent_to_ball(Column,Row,GameState,Ball_Positions,Bool):-
     is_adjacent_to_ball_cycle(Column,Row,GameState,Ball_Positions,Bool).
-    
+
 is_adjacent_to_ball_cycle(_Column,_Row,_GameState,[],1).
 is_adjacent_to_ball_cycle(Column,Row,GameState,[[Column_Ball,Row_Ball]|T],Bool):-
     are_adjacent(Column,Row,Column_Ball,Row_Ball,Bool_aux),
     is_adjacent_to_ball_cycle(Column,Row,GameState,T,Bool1),
     Bool is Bool1*Bool_aux.
 
-
 get_recolocate_possibilities(Color,GameState,LastRow,LastColumn):-
     findall([Column,Row], empty_ring_color(Column, Row, GameState,Color),L).
-
-  

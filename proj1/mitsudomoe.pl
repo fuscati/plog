@@ -4,6 +4,7 @@
 :-consult('logic.pl').
 :-consult('utilis.pl').
 :-consult('menu.pl').
+:-consult('adjacent.pl').
 :-use_module(library(lists)).
 :-use_module(library(system)).
 
