@@ -21,18 +21,15 @@ get_rings(SelColumn, SelRow, Rings, Ball, GameState) :-
 
 %não há anel no topo
 get_top_ring_index([],StartIndex,Index) :-
-  Index is StartIndex,
-  nl.
+  Index is StartIndex.
 
 %descobre um anel branco
 get_top_ring_index(['white_ring'|_],StartIndex,Index) :-
-  Index is StartIndex,
-  nl.
+  Index is StartIndex.
 
 %descobre um anel preto
 get_top_ring_index(['black_ring'|_],StartIndex,Index) :-
-  Index is StartIndex,
-  nl.
+  Index is StartIndex.
 
 %retorna em Index a posição do top_ring da stack de anéis  
 get_top_ring_index([_|T],StartIndex,Index) :-
@@ -62,7 +59,6 @@ replace_ring(GameState,'white',Row,Column,Ball,Rings,Index,NewGameState) :-
   I is Index - 1,
   replace(Rings,I,'white_ring',R),
   BR = [Ball|R],
-  write(BR),
   get_row(Row, GameState, NRow),
   replace(NRow, Column, BR, NewRow),
   replace(GameState, Row, NewRow, NewGameState).
@@ -82,8 +78,7 @@ replace_ring(GameState,'empty',Row,Column,Ball,Rings,Index,NewGameState) :-
   BR = [Ball|R],
   get_row(Row, GameState, NRow),
   replace(NRow, Column, BR, NewRow),
-  replace(GameState, Row, NewRow, NewGameState),
-  write(R).
+  replace(GameState, Row, NewRow, NewGameState).
 
 %substitui a bola na posição Row Column de GameState por Ball 
 replace_ball(GameState,Row,Column,Ball,NewGameState):-

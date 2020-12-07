@@ -1,12 +1,18 @@
 startGame('P', 'P') :-
     initial(GameState),
-    play_loop(GameState,-1,8,8),
+    play_loop(GameState,-1,5,5),
     nl,
     display_winner(Winner).
 
 startGame('P', 'C') :-
     initial(GameState),
-    play_loop2(GameState,-1,8,8),
+    play_loop2(GameState,-1,5,5),
+    nl,
+    display_winner(Winner).
+
+startGame('C', 'C') :-
+    initial(GameState),
+    play_loop3(GameState,-1,5,5),
     nl,
     display_winner(Winner).
 
@@ -40,11 +46,20 @@ play_loop(GameState,Winner,WhiteRings,BlackRings) :-
   play_loop(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
 play_loop2(GameState,Winner,WhiteRings,BlackRings) :-
-  %game_white(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings),
-  %winner_white(NewWhiteGameState,Winner),!,
+  game_white(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings),
+  winner_white(NewWhiteGameState,Winner),!,
   game_bot(GameState,Winner,BlackRings,NewBlackGameState,NewBlackRings),
-  winner_black(NewBlackGameState,Winner),!.
-  %play_loop2(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
+  winner_black(NewBlackGameState,Winner),!,
+  play_loop2(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
+
+play_loop3(GameState,Winner,WhiteRings,BlackRings) :-
+  sleep(2),
+  game_bot(GameState,Winner,WhiteRings,NewWhiteGameState,NewWhiteRings,'white'),
+  winner_white(NewWhiteGameState,Winner),!,
+  sleep(2),
+  game_bot(NewWhiteGameState,Winner,BlackRings,NewBlackGameState,NewBlackRings,'black'),
+  winner_black(NewBlackGameState,Winner),!,
+  play_loop3(NewBlackGameState,Winner,NewWhiteRings,NewBlackRings).
 
 %constrói o estado de jogo inicial
 initial(GameState) :-
@@ -72,10 +87,7 @@ option(1,GameState,Player,Rings,NewRings,NewGameState):-
 
 %descobre todas as jogadas possíveis de adicionar anéis
 get_add_ring_possibilities(GameState,Rings,Possibilities) :-
-    findall([Column,Row], check_add_ring(GameState,Row,Column,Rings,true), Possibilities),
-    nl,
-    write('Add ring Possibilities: '),
-    write(Possibilities).
+    findall([Column,Row], check_add_ring(GameState,Row,Column,Rings,true), Possibilities).
 
 %caso seja escolhida a opção 1 (mover um anel)
 %le-se as coordenadas, verifica-se,remove-se da casa de partida e adiciona-se na casa de chegada
@@ -93,20 +105,24 @@ option_bot(1,GameState,Player,Rings,NewRings,NewGameState):-
     get_add_ring_possibilities(GameState,Rings,Possibilities),
     (call(check_possibilities(Possibilities)) -> true, !; fail),
     get_easy_bot_decision_rings(GameState,Player,Column,Row,Possibilities),
-    check_add_ring(GameState,Row,Column,Rings,Bool),
+
     add_ring(GameState,Player,Row,Column,Rings,NewRings,NewGameState).
 
+option_bot(2,GameState,Player,Rings,NewRings,NewGameState):-
+    get_remove_ring_possibilities(GameState,Player,Possibilities),
+    (call(check_possibilities(Possibilities)) -> true, !; fail),
+    get_easy_bot_decision_remove_rings(GameState,Player,Column,Row,Possibilities),
+    remove_ring(GameState,Player,Row,Column,Rings,NGameState),
+    option_bot(1,NGameState,Player,Rings,NRings,NewGameState)
+    NewRings is NRings+1.
 
-
+get_easy_bot_decision_remove_rings(GameState,Player,Column,Row,[[Column,Row]|T]).
 
 get_easy_bot_decision_ball([[[ColumnFrom,RowFrom],[ColumnTo,RowTo]]|_],ColumnFrom,RowFrom,ColumnTo,RowTo).
 
 %descobre todas as jogadas possíveis de remover anéis para depois os mover
 get_remove_ring_possibilities(GameState,Player,Possibilities) :-
-    findall([Column,Row], check_remove_ring(Player,GameState,Row,Column,true), Possibilities),
-    nl,
-    write('Remove ring Possibilities: '),
-    write(Possibilities).
+    findall([Column,Row], check_remove_ring(Player,GameState,Row,Column,true), Possibilities).
 
 check_possibilities([]) :-
   nl, write('There are no Possibilities'), fail.
@@ -114,10 +130,7 @@ check_possibilities([]) :-
 check_possibilities([_|_]).
 
 get_move_ball_possibilities(GameState,Player,Possibilities):-
-  setof([[Row_from,Column_from],[Column_to,Row_to]],can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,1,Vault), Possibilities),
-  nl,
-  write('Move Ball Possibilities: '),
-  write(Possibilities).
+  setof([[Row_from,Column_from],[Column_to,Row_to]],can_move(GameState,Player,Row_from,Column_from, Row_to, Column_to,1,Vault), Possibilities).
 
 %trata de todo o procedimento de mexer uma bola, ler as coordenadas das casas inicial e final
 %verifica se pode mover, se se poder mover move, dá display e realiza o vaulting se Vault for 1
@@ -142,6 +155,7 @@ read_move_ball_bot(GameState,Player,ColumnFrom,RowFrom,ColumnTo,RowTo,NGameState
     repeat_can_move(GameState,Player,RowFrom,ColumnFrom,ColumnTo,RowTo,Bool,Vault),
     move_ball(GameState,RowFrom,ColumnFrom,RowTo,ColumnTo,NewGameState,Player),
     vault(NewGameState,RowFrom,ColumnFrom,RowTo,ColumnTo,NGameState,Player,Vault).
+
 
 repeat_can_move(_GameState,_Player,_Row_from,_Column_from, _Column_to, _Row_to,Bool,_Vault):-
 Bool>0.
@@ -188,16 +202,14 @@ game_black(GameState,X,Rings_black,NewGameState,NewRings):-
   display_game(NGameState,'black'),
   read_move_ball(NGameState,'black',NewGameState).
 
-game_bot(GameState,X,Rings_black,NewGameState,NewRings) :-
-  display_game(GameState,'black'),
+game_bot(GameState,X,Rings,NewGameState,NewRings,Player) :-
+  display_game(GameState,Player),
   nl,
-  write('Player black'),
-  option_bot(1,GameState,'black',Rings_black,NewRings,NGameState),
-  display_game(NGameState,'black'),
- 
-  get_move_ball_possibilities(NGameState,'black',Possibilities),
+  write('Player '),write(Player),nl,
+  (Rings>0->NGameState = GameState;option_bot(2,GameState,Player,Rings,NewRings,NGameState)),
+  option_bot(1,NGameState,Player,Rings,NewRings,NNGameState)
+  display_game(NNGameState,Player),
+  get_move_ball_possibilities(NNGameState,Player,Possibilities),
   nl,
-  write(Possibilities),
   get_easy_bot_decision_ball(Possibilities,ColumnFrom,RowFrom,ColumnTo,RowTo),
-  format('\nCFrom: ~w RFrom: ~w CTo: ~w RTo: ~w', [ColumnFrom,RowFrom,ColumnTo,RowTo]),
-  read_move_ball_bot(NGameState,'black',ColumnFrom,RowFrom,ColumnTo,RowTo,NewGameState).
+  read_move_ball_bot(NNGameState,Player,ColumnFrom,RowFrom,ColumnTo,RowTo,NewGameState).

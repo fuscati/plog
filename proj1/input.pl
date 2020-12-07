@@ -75,14 +75,12 @@ manageColumn(NewColumn) :-
 %le a linha
 readRow(Row) :-
     write('  > Row    '),
-    read(Row),
-    nl,write(Row).
+    read(Row).
 
 %le a coluna
 readColumn(Column) :-
     write('  > Column '),
-    read(Column),
-    nl,write(Column).
+    read(Column).
 
 %Valida a linha
 validateRow('A', 0).

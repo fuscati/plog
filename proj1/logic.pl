@@ -21,7 +21,6 @@ check_add_ring_decision(GameState,Row,Column,'white_ball',Rings,false):-
 add_ring(GameState,Player,Row,Column,RingsNumber,NewRingsNumber,NewGameState):-
     get_rings(Column, Row, Rings, Ball, GameState),
     get_top_ring_index(Rings,0,Index),
-    nl,
     replace_ring(GameState,Player,Row,Column,Ball,Rings,Index,NewGameState),
     NewRingsNumber is RingsNumber - 1.
 
@@ -264,7 +263,6 @@ check_ball_from_move(Player,GameState,NRow_from,Column_from):-
     ball_to_color(Ball,Color),
     (
     Color\=Player->(
-    nl,
     read_ball_from_move(Player,Row,Column_from,NRow_from),
     check_ball_from_move(Player,GameState,NRow_from,Column_from)
     ); true
